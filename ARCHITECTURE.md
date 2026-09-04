@@ -17,6 +17,7 @@ src/
 │   ├── itinerary/                    # "The Itinerary" travel pinboard domain
 │   │   ├── components/               # PeggedCard, TravelCard, AirplaneTicket, Mementos, Icons
 │   │   ├── data/                     # Stops dataset, tilt angles, swipe constants
+│   │   ├── sound/                    # Procedural Web Audio API sound generator and hooks
 │   │   ├── textures/                 # SVG data URIs (wood grain, cork mottle, wall plaster)
 │   │   ├── types.ts                  # Domain types (Stop)
 │   │   ├── itinerary-section.tsx     # High-level section orchestrator
