@@ -55,8 +55,9 @@
 }
 
 @theme inline {
-  --font-sans: 'Satoshi', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-satoshi: 'Satoshi', sans-serif;
+  --font-sans: var(--font-satoshi), 'Satoshi', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-satoshi: var(--font-satoshi), 'Satoshi', sans-serif;
+  --font-mono: var(--font-satoshi), 'Satoshi', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -78,6 +79,27 @@
   --color-ring: var(--ring);
   --color-wireframe: var(--wireframe);
   --color-wireframe-subtle: var(--wireframe-subtle);
+  --color-itinerary-card: var(--itinerary-card);
+  --color-itinerary-card-back: var(--itinerary-card-back);
+  --color-itinerary-text: var(--itinerary-text);
+  --color-itinerary-accent: var(--itinerary-accent);
+  --color-ticket-bg: var(--ticket-bg);
+  --color-ticket-foreground: var(--ticket-foreground);
+  --color-ticket-muted: var(--ticket-muted);
+  --color-ticket-border: var(--ticket-border);
+  --color-ticket-stamp: var(--ticket-stamp);
+  --color-ticket-stamp-alt: var(--ticket-stamp-alt);
+  --color-ticket-perforation: var(--ticket-perforation);
+  --color-ticket-stub: var(--ticket-stub);
+  --color-meridian-bg: var(--meridian-bg);
+  --color-meridian-well: var(--meridian-well);
+  --color-meridian-surface: var(--meridian-surface);
+  --color-meridian-surface-hover: var(--meridian-surface-hover);
+  --color-meridian-surface-active: var(--meridian-surface-active);
+  --shadow-inset-well: inset 0 2px 8px 0 rgba(0, 0, 0, 0.8), inset 0 1px 2px 0 rgba(0, 0, 0, 0.6);
+  --shadow-inset-shallow: inset 0 1px 3px 0 rgba(0, 0, 0, 0.65), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --shadow-tactile-raised: 0 8px 24px -4px rgba(0, 0, 0, 0.6), 0 2px 6px -1px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+  --shadow-tactile-pressed: inset 0 2px 6px 0 rgba(0, 0, 0, 0.75), inset 0 1px 2px 0 rgba(0, 0, 0, 0.5);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -107,6 +129,23 @@
   --ring: hsl(240 5.9% 10%);
   --wireframe: hsl(240 5.9% 80%);
   --wireframe-subtle: hsl(240 4.8% 97%);
+  --itinerary-card: #f7f4ee;
+  --itinerary-card-back: #e6dcc6;
+  --itinerary-text: #5c4a2f;
+  --itinerary-accent: #e8843c;
+  --ticket-bg: #faf7ef;
+  --ticket-foreground: #1c1917;
+  --ticket-muted: #78716c;
+  --ticket-border: #e2dac9;
+  --ticket-stamp: #991b1b;
+  --ticket-stamp-alt: #1e3a8a;
+  --ticket-perforation: #d3c9b4;
+  --ticket-stub: #f2ebd9;
+  --meridian-bg: #08080a;
+  --meridian-well: rgba(0, 0, 0, 0.55);
+  --meridian-surface: rgba(255, 255, 255, 0.05);
+  --meridian-surface-hover: rgba(255, 255, 255, 0.09);
+  --meridian-surface-active: rgba(255, 255, 255, 0.14);
   --radius: 0.625rem;
 }
 
@@ -132,6 +171,23 @@
   --ring: hsl(240 4.9% 83.9%);
   --wireframe: hsl(240 3.7% 25%);
   --wireframe-subtle: hsl(240 10% 6.5%);
+  --itinerary-card: #f7f4ee;
+  --itinerary-card-back: #e6dcc6;
+  --itinerary-text: #5c4a2f;
+  --itinerary-accent: #e8843c;
+  --ticket-bg: #1c1917;
+  --ticket-foreground: #fafaf9;
+  --ticket-muted: #a8a29e;
+  --ticket-border: #383531;
+  --ticket-stamp: #ef4444;
+  --ticket-stamp-alt: #60a5fa;
+  --ticket-perforation: #44403c;
+  --ticket-stub: #141210;
+  --meridian-bg: #08080a;
+  --meridian-well: rgba(0, 0, 0, 0.65);
+  --meridian-surface: rgba(255, 255, 255, 0.05);
+  --meridian-surface-hover: rgba(255, 255, 255, 0.09);
+  --meridian-surface-active: rgba(255, 255, 255, 0.14);
 }
 
 * {

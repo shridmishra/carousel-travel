@@ -133,10 +133,6 @@ export function MembershipCard({
               color: colors.accent,
             }}
           >
-            <span
-              className="size-1.5 rounded-full"
-              style={{ backgroundColor: colors.accent, boxShadow: `0 0 8px ${colors.accent}` }}
-            />
             Active
           </div>
         </div>
@@ -190,10 +186,10 @@ export function MembershipCard({
               >
                 No.
               </p>
-              <p className="mt-0.5 font-mono text-xs tabular-nums text-white/90">{item.serial}</p>
+              <p className="mt-0.5 text-xs font-semibold tabular-nums tracking-wider text-white/90">{item.serial}</p>
             </div>
           </div>
-          <p className="mt-3 font-mono text-[0.6rem] tracking-wide text-white/45">
+          <p className="mt-3 text-[0.62rem] font-medium tracking-wide text-white/45">
             {item.coordinates}
             {index && total ? (
               <span className="float-right tabular-nums">
@@ -202,6 +198,139 @@ export function MembershipCard({
             ) : null}
           </p>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Reverse face — the anatomy of a real membership pass                      */
+/* -------------------------------------------------------------------------- */
+
+interface MembershipCardBackProps {
+  item: DestinationCard;
+  index?: number;
+  total?: number;
+  className?: string;
+}
+
+export function MembershipCardBack({
+  item,
+  index,
+  total,
+  className,
+}: MembershipCardBackProps) {
+  const { colors } = item;
+
+  return (
+    <div
+      className={cn(
+        "relative aspect-[0.68] w-full select-none overflow-hidden rounded-[1.75rem] text-white",
+        "shadow-[0_2px_2px_rgba(0,0,0,0.12),0_18px_40px_-12px_rgba(0,0,0,0.55)]",
+        className
+      )}
+      style={{
+        // A quieter, deeper wash than the front — the "underside" of the card.
+        backgroundImage: `linear-gradient(200deg, ${colors.via} 0%, ${colors.to} 60%, #050507 100%)`,
+      }}
+    >
+      {/* Guilloché, faint and centered */}
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 opacity-[0.1]">
+        <Guilloche color={colors.accent} />
+      </div>
+
+      {/* Edge sheen + inner ring */}
+      <div className="pointer-events-none absolute inset-0 rounded-[1.75rem] ring-1 ring-inset ring-white/12" />
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[1.75rem] opacity-40"
+        style={{
+          background:
+            "linear-gradient(200deg, rgba(255,255,255,0.22), transparent 24%, transparent 76%, rgba(0,0,0,0.34))",
+        }}
+      />
+
+      {/* Grain */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.09] mix-blend-overlay"
+        style={{ backgroundImage: GRAIN_URI, backgroundSize: "140px 140px" }}
+      />
+
+      {/* Content */}
+      <div className="relative flex h-full flex-col p-6 sm:p-7">
+        {/* Header row */}
+        <div className="flex items-center justify-between">
+          <span className="text-[0.7rem] font-bold uppercase tracking-[0.42em] text-white/90">
+            Meridian
+          </span>
+          <span
+            className="text-[0.58rem] font-semibold uppercase tracking-[0.22em]"
+            style={{ color: colors.accent }}
+          >
+            {item.tier}
+          </span>
+        </div>
+
+        {/* Magnetic stripe */}
+        <div className="relative mt-6 h-11 w-[calc(100%+3rem)] -translate-x-6 overflow-hidden bg-black/70 sm:-translate-x-7 sm:w-[calc(100%+3.5rem)]">
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.12)_20%,transparent_40%,rgba(255,255,255,0.08)_70%,transparent)]" />
+          <div className="absolute inset-x-0 top-0 h-px bg-white/15" />
+          <div className="absolute inset-x-0 bottom-0 h-px bg-black/60" />
+        </div>
+
+        {/* Signature panel */}
+        <div className="mt-5 flex items-stretch gap-3">
+          <div className="relative flex-1 overflow-hidden rounded-md bg-white/90">
+            {/* Micro guilloché lines inside the signature strip */}
+            <div className="pointer-events-none absolute inset-0 opacity-60 bg-[repeating-linear-gradient(115deg,transparent_0_3px,rgba(0,0,0,0.06)_3px_4px)]" />
+            <div className="relative flex h-11 items-center px-3">
+              <span className="text-lg italic leading-none text-black/70 [font-family:var(--font-sans)] -rotate-2">
+                {item.member}
+              </span>
+            </div>
+          </div>
+          <div className="flex w-[38%] flex-col items-end justify-center rounded-md bg-white/5 px-3 ring-1 ring-inset ring-white/10">
+            <span className="text-[0.5rem] font-semibold uppercase tracking-[0.2em] text-white/45">
+              CVX
+            </span>
+            <span className="text-sm font-semibold tabular-nums text-white/90">
+              {String((index ?? 1) * 137 % 1000).padStart(3, "0")}
+            </span>
+          </div>
+        </div>
+
+        {/* Details */}
+        <div className="mt-auto space-y-3 pt-6">
+          <div className="flex items-center gap-2.5">
+            <span
+              className="flex size-8 items-center justify-center rounded-lg ring-1 ring-inset ring-white/15"
+              style={{ color: colors.accent, backgroundColor: "rgba(255,255,255,0.06)" }}
+            >
+              <Emblem emblem={item.emblem} className="size-4" />
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-white">{item.residence}</p>
+              <p className="truncate text-xs text-white/55">{item.region}</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-white/10 pt-3">
+            <div>
+              <p className="text-[0.54rem] font-semibold uppercase tracking-[0.22em] text-white/40">
+                Serial
+              </p>
+              <p className="mt-0.5 text-xs font-medium tabular-nums tracking-wider text-white/85">{item.serial}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-[0.54rem] font-semibold uppercase tracking-[0.22em] text-white/40">
+                Coordinates
+              </p>
+              <p className="mt-0.5 text-[0.62rem] font-medium tabular-nums text-white/85">
+                {item.coordinates}
+              </p>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );

@@ -11,9 +11,10 @@ import {
   type PanInfo,
 } from "motion/react";
 import { ArrowLeft01Icon, ArrowRight01Icon } from "hugeicons-react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { DestinationCard } from "./data";
-import { MembershipCard } from "./membership-card";
+import { MembershipCard, MembershipCardBack } from "./membership-card";
 
 interface StackEntry {
   item: DestinationCard;
@@ -27,6 +28,8 @@ type ExitIntent = { type: "fling"; dir: number } | { type: "fade" };
 const VISIBLE = 4;
 const SWIPE_DISTANCE = 90;
 const SWIPE_VELOCITY = 420;
+const FLIP_DISTANCE = 70;
+const FLIP_VELOCITY = 380;
 
 interface CardCarouselProps {
   items: DestinationCard[];
@@ -56,6 +59,7 @@ export function CardCarousel({
   }, []);
   const [exitDir, setExitDir] = React.useState(1);
   const [hasInteracted, setHasInteracted] = React.useState(false);
+  const [flipped, setFlipped] = React.useState(false);
 
   const front = stack[0];
   const activeIndex = items.findIndex((it) => it.id === front.item.id);
@@ -66,8 +70,14 @@ export function CardCarousel({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [front.uid]);
 
+  const toggleFlip = React.useCallback(() => {
+    setHasInteracted(true);
+    setFlipped((f) => !f);
+  }, []);
+
   const advance = React.useCallback((dir: number) => {
     setExitDir(dir >= 0 ? 1 : -1);
+    setFlipped(false);
     setStack((prev) => {
       const [first, ...rest] = prev;
       return [...rest, { item: first.item, uid: nextUid(), enterFrom: null }];
@@ -75,6 +85,7 @@ export function CardCarousel({
   }, [nextUid]);
 
   const rewind = React.useCallback(() => {
+    setFlipped(false);
     setStack((prev) => {
       const last = prev[prev.length - 1];
       const rest = prev.slice(0, prev.length - 1);
@@ -104,6 +115,13 @@ export function CardCarousel({
         } else if (e.key === "ArrowLeft") {
           e.preventDefault();
           handlePrev();
+        } else if (
+          (e.key === "Enter" || e.key === " ") &&
+          e.target === e.currentTarget
+        ) {
+          // Only flip when the carousel itself is focused — not its buttons.
+          e.preventDefault();
+          toggleFlip();
         }
       }}
       tabIndex={0}
@@ -134,6 +152,8 @@ export function CardCarousel({
                   itemCount={items.length}
                   isTop={i === 0}
                   reduce={!!reduce}
+                  flipped={i === 0 && flipped}
+                  onFlip={toggleFlip}
                   exitIntent={i === 0 ? { type: "fling", dir: exitDir } : { type: "fade" }}
                   onDismiss={(dir) => {
                     setHasInteracted(true);
@@ -152,19 +172,21 @@ export function CardCarousel({
           <ArrowLeft01Icon className="size-5" />
         </NavButton>
 
-        <div className="flex items-center gap-2" role="tablist" aria-label="Destinations">
+        <div className="flex items-center gap-2 rounded-full bg-meridian-well px-3 py-1.5 shadow-inset-well" role="tablist" aria-label="Destinations">
           {items.map((it, i) => {
             const active = i === activeIndex;
             return (
-              <button
+              <Button
                 key={it.id}
                 type="button"
+                variant="ghost"
                 role="tab"
                 aria-selected={active}
                 aria-label={it.destination}
                 onClick={() => {
                   if (i === activeIndex) return;
                   setHasInteracted(true);
+                  setFlipped(false);
                   // Rotate forward until the requested card is on top.
                   const steps = (i - activeIndex + items.length) % items.length;
                   setExitDir(1);
@@ -177,14 +199,14 @@ export function CardCarousel({
                     return arr;
                   });
                 }}
-                className="group relative h-2.5 rounded-full transition-all duration-300"
+                className="group relative h-2.5 rounded-full p-0 transition-all duration-300 shadow-sm"
                 style={{
                   width: active ? 26 : 10,
                   backgroundColor: active ? it.colors.accent : "rgba(255,255,255,0.22)",
                 }}
               >
                 <span className="sr-only">{it.destination}</span>
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -204,10 +226,10 @@ export function CardCarousel({
             transition={{ delay: 0.4, duration: 0.5 }}
             className="mt-5 flex items-center gap-2 text-xs font-medium tracking-wide text-white/45"
           >
-            <span className="hidden sm:inline">Drag a pass aside</span>
-            <span className="sm:hidden">Swipe to explore</span>
+            <span className="hidden sm:inline">Drag aside to browse</span>
+            <span className="sm:hidden">Swipe to browse</span>
             <span aria-hidden className="text-white/30">·</span>
-            <span>or use the arrows</span>
+            <span>tap to flip</span>
           </motion.p>
         )}
       </AnimatePresence>
@@ -225,19 +247,20 @@ function NavButton({
   onClick: () => void;
 }) {
   return (
-    <button
+    <Button
       type="button"
+      variant="ghost"
       aria-label={label}
       onClick={onClick}
       className={cn(
         "flex size-11 items-center justify-center rounded-full text-white/80 transition-all duration-200",
-        "border border-white/15 bg-white/5 backdrop-blur-sm",
-        "hover:border-white/30 hover:bg-white/10 hover:text-white active:scale-[0.92]",
+        "bg-meridian-well shadow-inset-shallow backdrop-blur-sm",
+        "hover:bg-meridian-surface hover:text-white hover:shadow-tactile-raised active:scale-[0.92] active:shadow-tactile-pressed",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
       )}
     >
       {children}
-    </button>
+    </Button>
   );
 }
 
@@ -249,6 +272,8 @@ interface StackItemProps {
   itemCount: number;
   isTop: boolean;
   reduce: boolean;
+  flipped: boolean;
+  onFlip: () => void;
   exitIntent: ExitIntent;
   onDismiss: (dir: number) => void;
 }
@@ -260,10 +285,13 @@ function StackItem({
   itemCount,
   isTop,
   reduce,
+  flipped,
+  onFlip,
   exitIntent,
   onDismiss,
 }: StackItemProps) {
   const x = useMotionValue(entry.enterFrom ?? 0);
+  const y = useMotionValue(0);
   const rotate = useTransform(x, [-220, 220], reduce ? [0, 0] : [-13, 13]);
   const glare = useTransform(x, [-150, 150], [-1, 1]);
 
@@ -278,24 +306,41 @@ function StackItem({
 
   const visualDepth = Math.min(depth, VISIBLE - 1);
   const scale = 1 - visualDepth * 0.05;
-  const y = visualDepth * 20;
+  const depthY = visualDepth * 20;
   const opacity = depth >= VISIBLE ? 0 : [1, 1, 0.92, 0.7][visualDepth];
   const zIndex = 50 - depth;
 
+  const snapBack = () => {
+    animate(x, 0, { type: "spring", stiffness: 400, damping: 34 });
+    animate(y, 0, { type: "spring", stiffness: 400, damping: 34 });
+  };
+
   const handleDragEnd = (_e: unknown, info: PanInfo) => {
-    const offset = info.offset.x;
-    const velocity = info.velocity.x;
-    if (Math.abs(offset) > SWIPE_DISTANCE || Math.abs(velocity) > SWIPE_VELOCITY) {
-      onDismiss(offset < 0 ? -1 : 1);
+    const { x: ox, y: oy } = info.offset;
+    const { x: vx, y: vy } = info.velocity;
+    const horizontal = Math.abs(ox) >= Math.abs(oy);
+
+    if (horizontal) {
+      // Horizontal intent → advance / rewind the deck.
+      if (Math.abs(ox) > SWIPE_DISTANCE || Math.abs(vx) > SWIPE_VELOCITY) {
+        onDismiss(ox < 0 ? -1 : 1);
+        return;
+      }
     } else {
-      animate(x, 0, { type: "spring", stiffness: 400, damping: 34 });
+      // Vertical intent → flip the pass over.
+      if (Math.abs(oy) > FLIP_DISTANCE || Math.abs(vy) > FLIP_VELOCITY) {
+        snapBack();
+        onFlip();
+        return;
+      }
     }
+    snapBack();
   };
 
   return (
     <motion.div
       className="absolute inset-0 will-change-transform"
-      style={{ x, rotate, zIndex }}
+      style={{ x, y, rotate, zIndex }}
       custom={exitIntent}
       variants={{
         exit: (intent: ExitIntent) =>
@@ -312,34 +357,68 @@ function StackItem({
       exit="exit"
       initial={false}
       animate={{
-        y,
         scale,
         opacity,
         transition: reduce
           ? { duration: 0.2 }
           : { type: "spring", stiffness: 320, damping: 34, mass: 0.9 },
       }}
-      drag={isTop ? "x" : false}
+      drag={isTop ? true : false}
       dragElastic={0.16}
-      dragConstraints={{ left: 0, right: 0 }}
+      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
       dragMomentum={false}
       onDragEnd={isTop ? handleDragEnd : undefined}
+      onTap={isTop ? onFlip : undefined}
       whileDrag={{ scale: reduce ? scale : 1.04, cursor: "grabbing" }}
       aria-hidden={!isTop}
     >
-      <div className={cn("relative h-full w-full", isTop ? "cursor-grab" : "pointer-events-none")}>
-        <MembershipCard
-          item={entry.item}
-          glare={glare}
-          index={originalIndex + 1}
-          total={itemCount}
-        />
+      <motion.div
+        className={cn(
+          "relative h-full w-full [perspective:1600px]",
+          isTop ? "cursor-grab" : "pointer-events-none"
+        )}
+        animate={{ y: depthY }}
+        transition={
+          reduce
+            ? { duration: 0.2 }
+            : { type: "spring", stiffness: 320, damping: 34, mass: 0.9 }
+        }
+      >
+        {/* Flip container — rotates in 3D to reveal the reverse face */}
+        <motion.div
+          className="relative h-full w-full [transform-style:preserve-3d]"
+          animate={{ rotateY: flipped ? 180 : 0 }}
+          transition={
+            reduce
+              ? { duration: 0.2 }
+              : { type: "spring", stiffness: 260, damping: 30, mass: 0.9 }
+          }
+        >
+          {/* Front */}
+          <div className="absolute inset-0 [backface-visibility:hidden] [-webkit-backface-visibility:hidden]">
+            <MembershipCard
+              item={entry.item}
+              glare={glare}
+              index={originalIndex + 1}
+              total={itemCount}
+            />
+          </div>
+          {/* Back */}
+          <div className="absolute inset-0 [backface-visibility:hidden] [-webkit-backface-visibility:hidden] [transform:rotateY(180deg)]">
+            <MembershipCardBack
+              item={entry.item}
+              index={originalIndex + 1}
+              total={itemCount}
+            />
+          </div>
+        </motion.div>
+
         {/* Depth scrim: back cards recede into shadow */}
         <div
           className="pointer-events-none absolute inset-0 rounded-[1.75rem] bg-black transition-opacity duration-300"
           style={{ opacity: visualDepth * 0.14 }}
         />
-      </div>
+      </motion.div>
     </motion.div>
   );
 }

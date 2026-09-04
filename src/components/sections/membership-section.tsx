@@ -3,16 +3,18 @@
 import * as React from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight01Icon } from "hugeicons-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { CardCarousel } from "@/components/card-carousel";
 import { DESTINATIONS, type DestinationCard } from "@/components/card-carousel/data";
 
 const GRAIN_URI =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
 
-const BENEFITS = [
+const FEATURES = [
   {
-    title: "Doors already open",
-    body: "Arrive and walk in. No calls to make, no confirmations to chase.",
+    id: "doors",
+    label: "Direct Entry",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
         <path d="M14 3v18M4 21h16M6 21V6a2 2 0 0 1 2-2h6" />
@@ -21,17 +23,18 @@ const BENEFITS = [
     ),
   },
   {
-    title: "Held, never listed",
-    body: "Each residence is chosen and reserved. You won't find them on a booking site.",
+    id: "unlisted",
+    label: "Off-Market",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        <path d="M12 3.5 14.6 9l6 .5-4.6 3.9 1.5 5.9L12 16.9 6.5 19.3 8 13.4 3.4 9.5l6-.5z" />
+        <circle cx="7.5" cy="15.5" r="4.5" />
+        <path d="m10.7 12.3 8.3-8.3M15.5 7.5l2 2M17.5 5.5l2 2" />
       </svg>
     ),
   },
   {
-    title: "One quiet card",
-    body: "A single pass carries your whole world. Swipe to see where today could go.",
+    id: "pass",
+    label: "Single Pass",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
         <rect x="3" y="6" width="18" height="12" rx="2.5" />
@@ -65,7 +68,7 @@ export function MembershipSection() {
   };
 
   return (
-    <section className="relative isolate min-h-screen w-full overflow-hidden bg-[#08080a] text-white">
+    <section className="relative isolate min-h-screen w-full overflow-hidden bg-meridian-bg text-white">
       {/* Ambient wash — a faint tint that follows the active pass */}
       <div
         className="pointer-events-none absolute inset-0 opacity-40 transition-[background] duration-1000 ease-out"
@@ -86,19 +89,19 @@ export function MembershipSection() {
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <span
-              className="inline-block size-2 rotate-45 transition-colors duration-700"
+              className="inline-block size-2 rotate-45 transition-colors duration-700 shadow-sm"
               style={{ backgroundColor: active.colors.accent }}
             />
             <span className="text-sm font-bold uppercase tracking-[0.4em]">Meridian</span>
           </div>
-          <span className="hidden font-mono text-[0.7rem] uppercase tracking-[0.25em] text-white/40 sm:block">
-            Est. MMXIX · By invitation
-          </span>
+          <div className="hidden items-center gap-2 rounded-full bg-meridian-well px-3.5 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/40 shadow-inset-shallow sm:flex">
+            <span>By invitation</span>
+          </div>
         </header>
 
         {/* Main */}
         <div className="grid flex-1 grid-cols-1 items-center gap-14 py-14 lg:grid-cols-[1.05fr_1fr] lg:gap-8 lg:py-0">
-          {/* Copy */}
+          {/* Copy & Inset UI Elements */}
           <motion.div
             variants={container}
             initial="hidden"
@@ -107,65 +110,66 @@ export function MembershipSection() {
           >
             <motion.h1
               variants={rise}
-              className="text-[2.75rem] font-black leading-[0.98] tracking-[-0.035em] sm:text-6xl lg:text-[4.25rem]"
+              className="text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.75rem]"
             >
               One membership.
               <br />
-              <span className="text-white/55">Every door.</span>
+              <span className="text-white/40">Every door.</span>
             </motion.h1>
 
-            <motion.p
-              variants={rise}
-              className="mt-6 max-w-md text-lg leading-relaxed text-white/60"
-            >
-              Meridian is a private club for people who would rather arrive than
-              arrange. A single card, quietly opening residences and moments
-              across the world.
-            </motion.p>
-
-            <motion.ul variants={rise} className="mt-10 space-y-px">
-              {BENEFITS.map((b) => (
-                <li
-                  key={b.title}
-                  className="flex items-start gap-4 border-t border-white/10 py-4 last:border-b"
-                >
-                  <span
-                    className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-colors duration-700"
-                    style={{ color: active.colors.accent }}
+            {/* Inset tactile UI feature dock - all three features rising active */}
+            <motion.div variants={rise} className="mt-8">
+              <div className="inline-flex flex-wrap items-center gap-2 rounded-2xl bg-meridian-well p-1.5 shadow-inset-well">
+                {FEATURES.map((f) => (
+                  <Badge
+                    key={f.id}
+                    variant="tactile"
+                    className="h-11 rounded-xl px-4 text-xs font-semibold tracking-wide gap-2.5 transition-all duration-300 select-none"
                   >
-                    <span className="size-[18px] [&>svg]:size-full">{b.icon}</span>
-                  </span>
-                  <div>
-                    <p className="text-[0.95rem] font-semibold text-white">{b.title}</p>
-                    <p className="mt-0.5 text-sm leading-relaxed text-white/50">{b.body}</p>
-                  </div>
-                </li>
-              ))}
-            </motion.ul>
-
-            <motion.div variants={rise} className="mt-9 flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                className="group inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-[#08080a] transition-all duration-200 hover:gap-3 hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#08080a] active:scale-[0.98]"
-                style={{ boxShadow: `0 8px 30px -8px ${active.colors.glow}88` }}
-              >
-                Request an invitation
-                <ArrowRight01Icon className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-              </button>
-              <button
-                type="button"
-                className="inline-flex h-12 items-center rounded-full border border-white/15 px-6 text-sm font-semibold text-white/80 transition-colors duration-200 hover:border-white/30 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#08080a]"
-              >
-                How membership works
-              </button>
+                    <span
+                      className="flex size-7 shrink-0 items-center justify-center rounded-full bg-meridian-well shadow-inset-shallow transition-colors duration-500"
+                      style={{ color: active.colors.accent }}
+                    >
+                      <span className="size-3.5 [&>svg]:size-full">{f.icon}</span>
+                    </span>
+                    <span>{f.label}</span>
+                  </Badge>
+                ))}
+              </div>
             </motion.div>
 
-            <motion.p
+            {/* Tactile Buttons with layered depth and shadow */}
+            <motion.div variants={rise} className="mt-8 flex flex-wrap items-center gap-3.5">
+              <Button
+                type="button"
+                className="group relative h-12 rounded-full bg-white px-6 text-sm font-semibold text-meridian-bg shadow-tactile-raised transition-all duration-200 hover:bg-white/90 active:scale-[0.98] active:shadow-tactile-pressed focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-meridian-bg"
+                style={{
+                  boxShadow: `0 14px 34px -8px ${active.colors.glow}99, inset 0 1px 0 rgba(255,255,255,1), inset 0 -2px 4px rgba(0,0,0,0.12)`,
+                }}
+              >
+                Request invitation
+                <ArrowRight01Icon className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                className="h-12 rounded-full bg-meridian-well px-6 text-sm font-semibold text-white/80 shadow-inset-shallow transition-all duration-200 hover:bg-meridian-surface hover:text-white hover:shadow-tactile-raised active:scale-[0.98] active:shadow-tactile-pressed focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-meridian-bg"
+              >
+                How it works
+              </Button>
+            </motion.div>
+
+            {/* Inset status pill */}
+            <motion.div
               variants={rise}
-              className="mt-8 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-white/35"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-meridian-well px-3.5 py-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-white/40 shadow-inset-shallow"
             >
-              By invitation · 2,400 members · 40 cities
-            </motion.p>
+              <span
+                className="size-1.5 rounded-full transition-colors duration-700"
+                style={{ backgroundColor: active.colors.accent }}
+              />
+              <span>2,400 members · 40 cities</span>
+            </motion.div>
           </motion.div>
 
           {/* Deck */}

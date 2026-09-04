@@ -97,7 +97,7 @@ export function BlankCanvasSection() {
         {/* Section 1: Typography Hierarchy (Satoshi Showcase) */}
         <div className="space-y-8">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="secondary" className="px-3 py-1 font-mono uppercase tracking-wider text-xs">
+            <Badge variant="secondary" className="px-3 py-1 font-sans uppercase tracking-wider text-xs">
               Design System // Satoshi Typography Hierarchy
             </Badge>
           </div>
@@ -108,7 +108,7 @@ export function BlankCanvasSection() {
             transition={{ duration: 0.4 }}
             className="space-y-4"
           >
-            <p className="font-mono text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            <p className="font-sans text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               [Display Headline — 900 Black]
             </p>
             <h1 className="text-4xl font-black tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
@@ -118,7 +118,7 @@ export function BlankCanvasSection() {
 
           <div className="grid gap-6 border-l-2 border-border pl-4 sm:pl-6 md:grid-cols-2">
             <div className="space-y-2">
-              <p className="font-mono text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              <p className="font-sans text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 [H1 Headline — 700 Bold]
               </p>
               <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
@@ -130,7 +130,7 @@ export function BlankCanvasSection() {
             </div>
 
             <div className="space-y-2">
-              <p className="font-mono text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              <p className="font-sans text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 [H2 Subtitle — 500 Medium]
               </p>
               <h3 className="text-xl font-medium tracking-tight text-foreground sm:text-2xl">
@@ -145,7 +145,7 @@ export function BlankCanvasSection() {
           {/* Body & Micro-Copy Showcase */}
           <div className="grid gap-4 rounded-xl border border-border bg-card p-6 shadow-xs sm:grid-cols-3">
             <div className="space-y-1.5">
-              <p className="font-mono text-xs font-semibold uppercase text-muted-foreground">
+              <p className="font-sans text-xs font-semibold uppercase text-muted-foreground">
                 Lead Body (18px)
               </p>
               <p className="text-base text-foreground font-medium">
@@ -154,7 +154,7 @@ export function BlankCanvasSection() {
             </div>
 
             <div className="space-y-1.5">
-              <p className="font-mono text-xs font-semibold uppercase text-muted-foreground">
+              <p className="font-sans text-xs font-semibold uppercase text-muted-foreground">
                 Regular Body (14px)
               </p>
               <p className="text-sm text-muted-foreground">
@@ -163,10 +163,10 @@ export function BlankCanvasSection() {
             </div>
 
             <div className="space-y-1.5">
-              <p className="font-mono text-xs font-semibold uppercase text-muted-foreground">
+              <p className="font-sans text-xs font-semibold uppercase text-muted-foreground">
                 Caption & Tokens (12px)
               </p>
-              <p className="font-mono text-xs text-muted-foreground">
+              <p className="font-sans text-xs text-muted-foreground">
                 --font-sans: Satoshi;
                 <br />
                 --color-primary: 240 5.9% 10%;
@@ -183,7 +183,7 @@ export function BlankCanvasSection() {
             <h4 className="text-base font-semibold text-foreground">
               Essential UI Kit Verification
             </h4>
-            <span className="font-mono text-xs text-muted-foreground">
+            <span className="font-sans text-xs text-muted-foreground">
               [src/components/ui/*]
             </span>
           </div>
@@ -218,7 +218,7 @@ export function BlankCanvasSection() {
                     Radix UI modal primitive wired with design tokens, responsive blur backdrop, and accessible focus management.
                   </DialogDescription>
                 </DialogHeader>
-                <div className="rounded-lg border border-border bg-muted/50 p-4 font-mono text-xs text-foreground">
+                <div className="rounded-lg border border-border bg-muted/50 p-4 font-sans text-xs text-foreground">
                   <code>bun run dev</code>
                 </div>
               </DialogContent>
@@ -228,7 +228,7 @@ export function BlankCanvasSection() {
               variant="outline"
               size="sm"
               onClick={handleCopyCommand}
-              className="font-mono text-xs gap-1.5"
+              className="font-sans text-xs gap-1.5"
             >
               {copied ? (
                 <>
@@ -267,7 +267,7 @@ export function BlankCanvasSection() {
                 Drop your new landing page sections directly into these structured slot containers.
               </p>
             </div>
-            <span className="font-mono text-xs text-muted-foreground">
+            <span className="font-sans text-xs text-muted-foreground">
               [EMPTY SECTION SLOTS]
             </span>
           </div>
@@ -275,7 +275,7 @@ export function BlankCanvasSection() {
           <div className="space-y-4">
             {/* Slot 01: Hero Slot */}
             <div className="group relative flex min-h-[160px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-wireframe bg-wireframe-subtle/60 p-8 text-center transition-colors hover:border-primary/40">
-              <div className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground shadow-2xs">
+              <div className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-sans font-semibold uppercase tracking-wider text-muted-foreground shadow-2xs">
                 <span className="size-2 rounded-full bg-foreground" />
                 Slot 01: Hero Section Dropzone
               </div>
@@ -296,7 +296,7 @@ export function BlankCanvasSection() {
                   className="border-dashed border-2 border-wireframe bg-wireframe-subtle/40 shadow-none transition-colors hover:border-primary/40"
                 >
                   <CardHeader className="p-4 pb-2">
-                    <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                    <span className="font-sans text-[11px] uppercase tracking-wider text-muted-foreground">
                       [{slot.label}]
                     </span>
                     <CardTitle className="text-sm">{slot.title}</CardTitle>
@@ -310,7 +310,7 @@ export function BlankCanvasSection() {
 
             {/* Slot 03: CTA / Conversion Slot */}
             <div className="flex min-h-[120px] flex-col items-center justify-center rounded-xl border-2 border-dashed border-wireframe bg-wireframe-subtle/30 p-6 text-center transition-colors hover:border-primary/40">
-              <span className="font-mono text-xs font-medium text-foreground">
+              <span className="font-sans text-xs font-medium text-foreground">
                 [Slot 03: Conversion / Footer CTA Dropzone]
               </span>
               <span className="mt-1 text-xs text-muted-foreground">
@@ -325,7 +325,7 @@ export function BlankCanvasSection() {
           <p>
             Created for <span className="font-semibold text-foreground">next-starter</span>. Ready for landing page generation.
           </p>
-          <p className="font-mono text-[11px]">
+          <p className="font-sans text-[11px]">
             Satoshi Font &bull; Tailwind v4 &bull; Bun
           </p>
         </footer>
