@@ -180,29 +180,7 @@ export function ItinerarySection() {
           </StickyNote>
           <PushPin color="#d64a4a" className="absolute -top-3 left-1/2 h-5 w-5 -translate-x-1/2 drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)]" />
         </div>
-        <div className="absolute right-8 top-[40rem] hidden 2xl:block">
-          <WashiTape rotate={16} className="absolute -right-1 -top-2 z-10 w-11" tone="rgba(230,120,140,0.5)" />
-          <MiniPolaroid
-            scene="linear-gradient(150deg,#8bc0a0,#5a86b9 70%,#e3d08c)"
-            caption="the view"
-            rotate={7}
-          />
-        </div>
-        <div className="absolute bottom-28 left-10 hidden 2xl:block">
-          <MiniPolaroid
-            scene="linear-gradient(160deg,#6fb3d0,#b98a5a 70%,#e3c98c)"
-            caption="someday"
-            rotate={5}
-          />
-          <PushPin color="#f0b429" className="absolute -top-3 left-1/2 h-4 w-4 -translate-x-1/2 drop-shadow-[0_3px_3px_rgba(0,0,0,0.35)]" />
-        </div>
-        <div className="absolute bottom-10 left-16 hidden 2xl:block">
-          <StickyNote color="#fce98a" ink="#7a5c12" rotate={-7}>
-            next
-            <br />
-            summer
-          </StickyNote>
-        </div>
+
         <div className="absolute bottom-16 right-12 hidden 2xl:block">
           <BoardingStub from="JFK" to="CDG" rotate={8} />
           <PushPin color="#3a7bd5" className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)]" />
@@ -211,18 +189,21 @@ export function ItinerarySection() {
 
       <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-5 py-16 sm:px-8 lg:py-20">
         {/* Header */}
-        <header className="relative z-10 mx-auto flex max-w-2xl flex-col items-center text-center">
-          <div className="flex items-center justify-center gap-2.5">
-            <span className="inline-block size-2 rotate-45 bg-itinerary-accent" />
-            <span className="font-sans text-[0.8rem] font-semibold uppercase tracking-[0.08em] text-neutral-500">
+        <header className="relative z-10 mx-auto flex max-w-3xl flex-col items-center text-center">
+          <div className="flex items-center justify-center gap-2">
+            <span className="inline-block size-1.5 rotate-45 bg-itinerary-accent shadow-xs" />
+            <span className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
               The Itinerary
             </span>
           </div>
-          <h2 className="mt-5 pb-1 text-[2.75rem] font-black leading-[1.2] tracking-[-0.035em] text-neutral-900 sm:text-6xl">
+          <h2 className="mt-4 text-balance text-4xl font-black leading-[1.08] tracking-[-0.035em] text-neutral-900 sm:text-5xl lg:text-6xl">
             Places you&rsquo;ll go,
             <br />
-            with us.
+            <span className="text-neutral-900/45">with us.</span>
           </h2>
+          <p className="mt-4 max-w-lg text-balance text-base font-normal leading-relaxed text-neutral-600 sm:text-lg">
+            Curated journeys and private access across the globe, reserved exclusively for members.
+          </p>
         </header>
 
         {/* The board: wooden frame + cork centre, rope strung inside */}
@@ -300,7 +281,7 @@ export function ItinerarySection() {
                 />
 
                 {order.length === 0 ? (
-                  <p className="pt-16 text-center text-sm font-medium text-[#5c4a2f]/60">
+                  <p className="pt-16 text-center text-sm font-medium text-itinerary-text/80">
                     The line is empty. Reveal a card to peg your first stop.
                   </p>
                 ) : (
@@ -381,10 +362,14 @@ export function ItinerarySection() {
             </div>
           )}
 
-          {!allRevealed && (
-            <p className="mt-4 text-center text-xs font-medium tracking-wide text-neutral-700 sm:text-sm">
+          {!allRevealed ? (
+            <p className="mt-4 text-center text-xs font-medium tracking-wide text-neutral-800 sm:text-sm">
               <span className="hidden sm:inline">Swipe or tap the top card</span>
               <span className="sm:hidden">Tap the top card</span>
+            </p>
+          ) : (
+            <p className="mt-4 text-center text-xs font-medium tracking-wide text-neutral-800 sm:text-sm">
+              Tap anywhere on the ticket to tear &amp; replay
             </p>
           )}
         </div>

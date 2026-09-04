@@ -92,9 +92,21 @@ export function AirplaneTicketCard({
         </defs>
       </svg>
 
-      {/* === INTACT TICKET (shown while not tearing) === */}
+      {/* === INTACT TICKET — the ENTIRE card is clickable to tear === */}
       {!tearing && (
-        <div className="relative h-full w-full [filter:drop-shadow(0_14px_28px_rgba(0,0,0,0.08))_drop-shadow(0_4px_10px_rgba(0,0,0,0.04))]">
+        <div
+          className="group relative h-full w-full cursor-pointer [filter:drop-shadow(0_14px_28px_rgba(0,0,0,0.08))_drop-shadow(0_4px_10px_rgba(0,0,0,0.04))]"
+          onClick={handleTear}
+          role="button"
+          tabIndex={0}
+          aria-label="Tear ticket to replay itinerary"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleTear();
+            }
+          }}
+        >
           <div
             className="relative flex h-full w-full overflow-hidden bg-ticket-bg text-ticket-foreground select-none"
             style={{ clipPath: `url(#${clipId})` }}
@@ -140,23 +152,11 @@ export function AirplaneTicketCard({
               <div className="h-[75%] border-r border-dashed border-ticket-perforation" />
             </div>
 
-            {/* TEAR-OFF STUB (Right 28%) — clickable to tear & replay */}
-            <div
-              className="group/stub relative flex h-full w-[28%] cursor-pointer flex-col items-center justify-between bg-ticket-stub/40 p-3 py-4 text-center transition-colors hover:bg-ticket-stub/60 sm:p-4"
-              onClick={handleTear}
-              role="button"
-              tabIndex={0}
-              aria-label="Tear ticket to replay itinerary"
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  handleTear();
-                }
-              }}
-            >
+            {/* STUB (Right 28%) */}
+            <div className="relative flex h-full w-[28%] flex-col items-center justify-between bg-ticket-stub/40 p-3 py-4 text-center transition-colors group-hover:bg-ticket-stub/60 sm:p-4">
               <Badge
                 variant="outline"
-                className="h-4 rounded-[3px] border-ticket-perforation bg-ticket-bg/80 px-1.5 text-[0.48rem] font-bold uppercase tracking-wider text-ticket-muted transition-colors group-hover/stub:border-ticket-muted"
+                className="h-4 rounded-[3px] border-ticket-perforation bg-ticket-bg/80 px-1.5 text-[0.48rem] font-bold uppercase tracking-wider text-ticket-muted transition-colors group-hover:border-ticket-muted"
               >
                 Gate 01
               </Badge>
@@ -178,8 +178,8 @@ export function AirplaneTicketCard({
               </div>
 
               {/* Replay action text on stub */}
-              <div className="flex items-center justify-center rounded px-2 py-0.5 transition-all group-hover/stub:scale-105 group-hover/stub:bg-ticket-foreground/10">
-                <span className="text-[0.52rem] font-black uppercase tracking-[0.2em] text-ticket-muted transition-colors group-hover/stub:text-ticket-foreground">
+              <div className="flex items-center justify-center rounded px-2 py-0.5 transition-all group-hover:scale-105 group-hover:bg-ticket-foreground/10">
+                <span className="text-[0.52rem] font-black uppercase tracking-[0.2em] text-ticket-muted transition-colors group-hover:text-ticket-foreground">
                   ✂ Replay
                 </span>
               </div>
@@ -204,7 +204,7 @@ export function AirplaneTicketCard({
         </div>
       )}
 
-      {/* === TORN SEPARATING HALVES (shown during tear animation) === */}
+      {/* === TORN HALVES — always tears at the perforation line === */}
       {tearing && (
         <div className="relative h-full w-full">
           {/* Left Ticket Body (0% to 72% width) */}

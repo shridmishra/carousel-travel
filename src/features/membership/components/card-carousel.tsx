@@ -218,11 +218,11 @@ export function CardCarousel({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="mt-5 flex items-center gap-2 text-xs font-medium tracking-wide text-white/45"
+            className="mt-5 flex items-center gap-2 text-xs font-medium tracking-wide text-white/65"
           >
             <span className="hidden sm:inline">Drag aside to browse</span>
             <span className="sm:hidden">Swipe to browse</span>
-            <span aria-hidden className="text-white/30">·</span>
+            <span aria-hidden className="text-white/45">·</span>
             <span>tap to flip</span>
           </motion.p>
         )}

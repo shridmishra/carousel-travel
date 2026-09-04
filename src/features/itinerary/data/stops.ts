@@ -7,8 +7,7 @@ export const ITINERARY: Stop[] = [
     location: "Göreme, Turkey",
     tag: "Top rated",
     blurb: "Dawn balloon ascent over the fairy chimneys, private launch.",
-    photo:
-      "https://images.unsplash.com/photo-1641128324972-af3212f0f6bd?q=80&w=800&auto=format&fit=crop",
+    photo: "/images/itinerary/cappadocia.webp",
     accent: "#E8843C",
   },
   {
@@ -17,8 +16,7 @@ export const ITINERARY: Stop[] = [
     location: "Kansai, Japan",
     tag: "Member favourite",
     blurb: "A garden ryokan held for you, tea at first light.",
-    photo:
-      "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=800&auto=format&fit=crop",
+    photo: "/images/itinerary/kyoto.webp",
     accent: "#E5647A",
   },
   {
@@ -27,8 +25,7 @@ export const ITINERARY: Stop[] = [
     location: "Campania, Italy",
     tag: "Signature",
     blurb: "Cliffside marina, a boat waiting whenever the water calls.",
-    photo:
-      "https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=800&auto=format&fit=crop",
+    photo: "/images/itinerary/amalfi.webp",
     accent: "#2E9BD6",
   },
   {
@@ -37,8 +34,7 @@ export const ITINERARY: Stop[] = [
     location: "Marrakesh-Safi, Morocco",
     tag: "Hidden gem",
     blurb: "A walled riad behind an unmarked door, courtyard to yourself.",
-    photo:
-      "https://images.unsplash.com/photo-1597212618440-806262de4f6b?q=80&w=800&auto=format&fit=crop",
+    photo: "/images/itinerary/marrakech.webp",
     accent: "#E0A43B",
   },
   {
@@ -47,8 +43,7 @@ export const ITINERARY: Stop[] = [
     location: "Höfuðborg, Iceland",
     tag: "Seasonal",
     blurb: "Aurora lodge off-grid, woken only if the sky performs.",
-    photo:
-      "https://images.unsplash.com/photo-1509316785289-025f5b846b35?q=80&w=800&auto=format&fit=crop",
+    photo: "/images/itinerary/reykjavik.webp",
     accent: "#3FB79A",
   },
 ];
