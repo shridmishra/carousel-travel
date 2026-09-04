@@ -331,7 +331,13 @@ function StackItem({
   return (
     <motion.div
       className="absolute inset-0 will-change-transform"
-      style={{ x, y, rotate, zIndex }}
+      style={{
+        x,
+        y,
+        rotate,
+        zIndex,
+        touchAction: isTop ? "none" : undefined,
+      }}
       custom={exitIntent}
       variants={{
         exit: (intent: ExitIntent) =>

@@ -1,12 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { motion, Reorder, type Transition } from "motion/react";
+import { motion, Reorder, useDragControls, type Transition } from "motion/react";
 import { cn } from "@/lib/utils";
 import type { Stop } from "../types";
 import { HANG_TILTS } from "../data/stops";
 import { Clothespin } from "./icons";
 import { CardFaces } from "./travel-card";
+import { playPegRelease, playCardReorder } from "../sound";
 
 export const CARD_SPRING = { type: "spring" as const, stiffness: 140, damping: 20, mass: 1.0 };
 export const REPLAY_SPRING = { type: "spring" as const, stiffness: 140, damping: 20, mass: 1.0 };
@@ -37,8 +38,8 @@ export function PeggedCard({
   const tilt = HANG_TILTS[index % HANG_TILTS.length];
   const itemTransition = reduce ? { duration: 0.2 } : (customTransition || CARD_SPRING);
   const [dragging, setDragging] = React.useState(false);
-  const moved = React.useRef(false);
-  const start = React.useRef({ x: 0, y: 0 });
+  const isDraggingRef = React.useRef(false);
+  const controls = useDragControls();
 
   if (isActive) {
     return (
@@ -61,44 +62,48 @@ export function PeggedCard({
       as="div"
       layoutId={`stop-${id}`}
       transition={itemTransition}
-      whileDrag={{ scale: 1.06, zIndex: 40 }}
+      dragControls={controls}
+      dragListener={false}
+      whileDrag={{ scale: 1.06, zIndex: 50 }}
       onDragStart={() => {
-        moved.current = true;
+        isDraggingRef.current = true;
         setDragging(true);
+        playCardReorder();
       }}
       onDragEnd={() => {
         setDragging(false);
-        setTimeout(() => (moved.current = false), 0);
+        // Retain drag flag briefly to swallow trailing synthetic click events on touch devices
+        setTimeout(() => {
+          isDraggingRef.current = false;
+        }, 250);
       }}
       onPointerDown={(e) => {
-        moved.current = false;
-        start.current = { x: e.clientX, y: e.clientY };
-      }}
-      onPointerMove={(e) => {
-        if (
-          Math.abs(e.clientX - start.current.x) > 6 ||
-          Math.abs(e.clientY - start.current.y) > 6
-        ) {
-          moved.current = true;
+        // Desktop / mouse users can initiate drag from anywhere on the card
+        if (e.pointerType === "mouse") {
+          controls.start(e);
         }
       }}
-      onClick={() => {
-        if (!moved.current) onOpen(id);
+      onTap={() => {
+        if (!isDraggingRef.current) {
+          playPegRelease();
+          onOpen(id);
+        }
       }}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
+          playPegRelease();
           onOpen(id);
         }
       }}
       className={cn(
-        "relative w-32 shrink-0 rounded-[1rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 sm:w-36",
+        "relative w-32 shrink-0 select-none rounded-[1rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 sm:w-36 !opacity-100",
         dragging ? "cursor-grabbing" : "cursor-grab",
       )}
-      style={{ aspectRatio: "0.65", touchAction: "none" }}
+      style={{ aspectRatio: "0.65", touchAction: "pan-y", opacity: 1 }}
       role="button"
       tabIndex={0}
-      aria-label={`View ${stop.place}. Drag to reorder.`}
+      aria-label={`View ${stop.place}. Drag peg to reorder.`}
     >
       <motion.div
         className="relative h-full w-full origin-top"
@@ -123,7 +128,14 @@ export function PeggedCard({
         <div className="pointer-events-none relative h-full w-full">
           <CardFaces stop={stop} seq={seq} faceUp reduce={reduce} />
         </div>
-        <div className="absolute -top-6 left-1/2 z-10 -translate-x-1/2">
+        <div
+          className="absolute -top-7 left-1/2 z-30 flex h-11 w-12 -translate-x-1/2 cursor-grab items-center justify-center active:cursor-grabbing"
+          style={{ touchAction: "none" }}
+          onPointerDown={(e) => {
+            controls.start(e);
+          }}
+          aria-label="Drag peg to reorder"
+        >
           <motion.div
             initial={reduce ? false : { opacity: 0, y: -8, scale: 0.85 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}

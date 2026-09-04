@@ -36,7 +36,7 @@ export function MembershipSection() {
   };
 
   return (
-    <section className="relative isolate min-h-screen w-full overflow-hidden bg-meridian-bg text-white">
+    <section className="relative z-10 isolate min-h-screen w-full overflow-hidden bg-meridian-bg text-white">
       {DESTINATIONS.map((d) => (
         <div
           key={d.id}
@@ -76,7 +76,7 @@ export function MembershipSection() {
           >
             <motion.p
               variants={rise}
-              className="mb-8 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.28em] text-white/60"
+              className="mb-8 hidden sm:flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.28em] text-white/60"
             >
               <Key01Icon
                 className="size-3.5 shrink-0 transition-colors duration-700"

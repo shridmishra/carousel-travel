@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { SolidPlane } from "./icons";
 import { GRAIN_URI } from "../textures";
+import { playTicketTear } from "../sound";
 
 export const TICKET_CLIP_PATH =
   "M 0.038 0 H 0.696 A 0.024 0.058 0 0 0 0.744 0 H 0.962 A 0.038 0.092 0 0 1 1 0.092 V 0.908 A 0.038 0.092 0 0 1 0.962 1 H 0.744 A 0.024 0.058 0 0 0 0.696 1 H 0.038 A 0.038 0.092 0 0 1 0 0.908 V 0.092 A 0.038 0.092 0 0 1 0.038 0 Z";
@@ -67,6 +68,7 @@ export function AirplaneTicketCard({
 
   const handleTear = React.useCallback(() => {
     if (tearing) return;
+    playTicketTear();
     setTearing(true);
   }, [tearing]);
 
