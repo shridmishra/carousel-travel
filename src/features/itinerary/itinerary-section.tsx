@@ -22,27 +22,37 @@ import {
   LuggageTag,
   CompassDoodle,
   WashiTape,
-  MiniPolaroid,
   Stamp,
   StickyNote,
   PushPin,
   BoardingStub,
 } from "./components/mementos";
+import { Volume2, VolumeX } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { CardFaces } from "./components/travel-card";
 import { AirplaneTicketCard } from "./components/airplane-ticket";
 import { PeggedCard, CARD_SPRING } from "./components/pegged-card";
+import { useItinerarySound } from "./sound";
 
 function HangingRope({
   top,
   className,
+  reduce = false,
 }: {
   top?: number | string;
   className?: string;
+  reduce?: boolean;
 }) {
   return (
-    <div
+    <motion.div
       className={cn("pointer-events-none absolute inset-x-6 sm:inset-x-10", className)}
       style={top !== undefined ? { top: typeof top === "number" ? `${top}px` : top } : undefined}
+      animate={reduce ? undefined : { y: [0, 1.2, 0] }}
+      transition={
+        reduce
+          ? undefined
+          : { duration: 5.5, repeat: Infinity, ease: [0.45, 0.05, 0.55, 0.95] }
+      }
       aria-hidden
     >
       <span className="absolute -left-1.5 -top-1 size-3 rounded-full bg-itinerary-pin shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
@@ -63,7 +73,7 @@ function HangingRope({
           vectorEffect="non-scaling-stroke"
         />
       </svg>
-    </div>
+    </motion.div>
   );
 }
 
@@ -71,6 +81,14 @@ export function ItinerarySection() {
   const reduce = useReducedMotion();
   const [active, setActive] = React.useState<string | null>(null);
   const [order, setOrder] = React.useState<string[]>([]);
+  const {
+    muted,
+    toggleMute,
+    playCardFlip,
+    playPegSnap,
+    playTicketArrival,
+    playDeckReset,
+  } = useItinerarySound();
 
   const revealed = React.useMemo(() => new Set(order), [order]);
   const activeStop = active ? ITINERARY.find((s) => s.id === active) ?? null : null;
@@ -85,23 +103,74 @@ export function ItinerarySection() {
     [],
   );
 
-  const open = React.useCallback((id: string) => setActive(id), []);
+  const open = React.useCallback(
+    (id: string) => {
+      if (!revealed.has(id)) {
+        playCardFlip();
+      }
+      setActive(id);
+    },
+    [revealed, playCardFlip],
+  );
 
   const hang = React.useCallback(() => {
     if (!active) return;
     const id = active;
+    playPegSnap();
     setOrder((prev) => (prev.includes(id) ? prev : [...prev, id]));
     setActive(null);
-  }, [active]);
+  }, [active, playPegSnap]);
 
   const reset = React.useCallback(() => {
+    playDeckReset();
     setActive(null);
     setOrder([]);
-  }, []);
+  }, [playDeckReset]);
+
+  const prevAllRevealed = React.useRef(allRevealed);
+  React.useEffect(() => {
+    if (allRevealed && !prevAllRevealed.current) {
+      const timer = setTimeout(() => {
+        playTicketArrival();
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+    prevAllRevealed.current = allRevealed;
+  }, [allRevealed, playTicketArrival]);
+
+  const boardScrollRef = React.useRef<HTMLDivElement>(null);
+  const prevOrderLength = React.useRef(order.length);
+
+  // Auto-scroll the board to the newly hung card
+  React.useEffect(() => {
+    if (order.length > prevOrderLength.current) {
+      const container = boardScrollRef.current;
+      if (container) {
+        const timer = setTimeout(() => {
+          const cards = container.querySelectorAll("[data-pegged-card='true']");
+          const lastCard = cards[cards.length - 1] as HTMLElement | undefined;
+          if (lastCard && container.scrollWidth > container.clientWidth) {
+            lastCard.scrollIntoView({
+              behavior: reduce ? "auto" : "smooth",
+              inline: "center",
+              block: "nearest",
+            });
+          } else if (container.scrollWidth > container.clientWidth) {
+            container.scrollTo({
+              left: container.scrollWidth,
+              behavior: reduce ? "auto" : "smooth",
+            });
+          }
+        }, 180);
+        return () => clearTimeout(timer);
+      }
+    }
+    prevOrderLength.current = order.length;
+  }, [order.length, reduce]);
 
   React.useEffect(() => {
     if (!active || alreadyRevealed) return;
-    const flip = reduce ? 220 : 820;
+    const flip = reduce ? 180 : 420;
     const t = window.setTimeout(hang, flip);
     return () => window.clearTimeout(t);
   }, [active, alreadyRevealed, reduce, hang]);
@@ -114,6 +183,28 @@ export function ItinerarySection() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [active, hang]);
+
+  const sectionRef = React.useRef<HTMLElement>(null);
+  const [isSectionVisible, setIsSectionVisible] = React.useState(true);
+
+  React.useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const checkVisibility = () => {
+      const rect = el.getBoundingClientRect();
+      const visible = rect.bottom > 80 && rect.top <= 120;
+      setIsSectionVisible(visible);
+    };
+
+    checkVisibility();
+    window.addEventListener("scroll", checkVisibility, { passive: true });
+    window.addEventListener("resize", checkVisibility, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", checkVisibility);
+      window.removeEventListener("resize", checkVisibility);
+    };
+  }, []);
 
   const handleDeckDragEnd = (_e: unknown, info: PanInfo) => {
     if (!topStop) return;
@@ -129,13 +220,45 @@ export function ItinerarySection() {
 
   return (
     <section
-      className="relative isolate min-h-screen w-full overflow-hidden text-neutral-900"
+      ref={sectionRef}
+      className="relative z-20 isolate min-h-screen w-full overflow-x-clip text-neutral-900"
       style={{
         backgroundColor: "#ece5d7",
         backgroundImage:
           "radial-gradient(120% 90% at 15% 0%, #f3ede0 0%, #e7ddca 55%, #ddd0b6 100%)",
       }}
     >
+      {/* Fixed top-right sound toggle scoped to the Itinerary section */}
+      <div
+        className={cn(
+          "fixed right-4 top-4 z-30 transition-all duration-300 sm:right-6 sm:top-6 lg:right-8 lg:top-8",
+          isSectionVisible
+            ? "pointer-events-auto translate-y-0 opacity-100"
+            : "pointer-events-none -translate-y-2 opacity-0",
+        )}
+      >
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={toggleMute}
+          aria-label={muted ? "Unmute sound effects" : "Mute sound effects"}
+          className="h-8 gap-2 rounded-full border-neutral-300/80 bg-white/80 px-3 text-xs font-medium text-neutral-700 shadow-xs backdrop-blur-md transition-all hover:bg-white hover:text-neutral-900 hover:shadow-sm active:scale-95"
+        >
+          {muted ? (
+            <>
+              <VolumeX className="size-3.5 text-neutral-500" />
+              <span>Muted</span>
+            </>
+          ) : (
+            <>
+              <Volume2 className="size-3.5 text-neutral-800" />
+              <span>Sound On</span>
+            </>
+          )}
+        </Button>
+      </div>
+
       {/* Wall textures */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.14] mix-blend-multiply"
@@ -161,68 +284,26 @@ export function ItinerarySection() {
         <div className="absolute right-[10%] top-16 hidden lg:block xl:right-[15%]">
           <CompassDoodle className="h-14 w-14 opacity-70" rotate={9} />
         </div>
-        <div className="absolute left-6 top-[19rem] hidden 2xl:block">
-          <WashiTape rotate={-16} className="absolute -left-2 -top-2 z-10 w-12" tone="rgba(210,200,180,0.6)" />
-          <MiniPolaroid
-            scene="linear-gradient(155deg,#e08a4c,#c65b73 65%,#7a5cc0)"
-            caption="the trip"
-            rotate={-8}
-          />
-        </div>
-        <div className="absolute left-10 top-[32rem] hidden 2xl:block">
-          <Stamp code="RVK" hue="#3fb79a" rotate={-9} />
-        </div>
-        <div className="absolute right-10 top-[24rem] hidden 2xl:block">
-          <StickyNote color="#bfe6c9" ink="#2f6b45" rotate={6}>
-            pack
-            <br />
-            light
-          </StickyNote>
-          <PushPin color="#d64a4a" className="absolute -top-3 left-1/2 h-5 w-5 -translate-x-1/2 drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)]" />
-        </div>
-        <div className="absolute right-8 top-[40rem] hidden 2xl:block">
-          <WashiTape rotate={16} className="absolute -right-1 -top-2 z-10 w-11" tone="rgba(230,120,140,0.5)" />
-          <MiniPolaroid
-            scene="linear-gradient(150deg,#8bc0a0,#5a86b9 70%,#e3d08c)"
-            caption="the view"
-            rotate={7}
-          />
-        </div>
-        <div className="absolute bottom-28 left-10 hidden 2xl:block">
-          <MiniPolaroid
-            scene="linear-gradient(160deg,#6fb3d0,#b98a5a 70%,#e3c98c)"
-            caption="someday"
-            rotate={5}
-          />
-          <PushPin color="#f0b429" className="absolute -top-3 left-1/2 h-4 w-4 -translate-x-1/2 drop-shadow-[0_3px_3px_rgba(0,0,0,0.35)]" />
-        </div>
-        <div className="absolute bottom-10 left-16 hidden 2xl:block">
-          <StickyNote color="#fce98a" ink="#7a5c12" rotate={-7}>
-            next
-            <br />
-            summer
-          </StickyNote>
-        </div>
-        <div className="absolute bottom-16 right-12 hidden 2xl:block">
-          <BoardingStub from="JFK" to="CDG" rotate={8} />
-          <PushPin color="#3a7bd5" className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)]" />
-        </div>
+
       </div>
 
-      <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-5 py-16 sm:px-8 lg:py-20">
+      <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-5 pt-16 pb-28 sm:px-8 sm:pb-36 lg:pt-20 lg:pb-44">
         {/* Header */}
-        <header className="relative z-10 mx-auto flex max-w-2xl flex-col items-center text-center">
-          <div className="flex items-center justify-center gap-2.5">
-            <span className="inline-block size-2 rotate-45 bg-itinerary-accent" />
-            <span className="font-sans text-[0.8rem] font-semibold uppercase tracking-[0.08em] text-neutral-500">
+        <header className="relative z-10 mx-auto flex max-w-3xl flex-col items-center text-center">
+          <div className="flex items-center justify-center gap-2">
+            <span className="inline-block size-1.5 rotate-45 bg-itinerary-accent shadow-xs" />
+            <span className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
               The Itinerary
             </span>
           </div>
-          <h2 className="mt-5 pb-1 text-[2.75rem] font-black leading-[1.2] tracking-[-0.035em] text-neutral-900 sm:text-6xl">
+          <h2 className="mt-4 text-balance text-4xl font-black leading-[1.08] tracking-[-0.035em] text-neutral-900 sm:text-5xl lg:text-6xl">
             Places you&rsquo;ll go,
             <br />
-            with us.
+            <span className="text-neutral-900/45">with us.</span>
           </h2>
+          <p className="mt-4 max-w-lg text-balance text-base font-normal leading-relaxed text-neutral-600 sm:text-lg">
+            Curated journeys and private access across the globe, reserved exclusively for members.
+          </p>
         </header>
 
         {/* The board: wooden frame + cork centre, rope strung inside */}
@@ -284,46 +365,49 @@ export function ItinerarySection() {
 
               {/* Inner padded stage with the rope */}
               <div className="relative min-h-[17rem] px-5 pb-8 pt-12 sm:px-9 sm:pt-14">
-                {/* Row 1 rope (always visible on all screens, fixed position on desktop and mobile) */}
-                <HangingRope className="top-8" />
-
-                {/* Row 2 rope (mobile only, visible when >= 3 cards wrap to second row) */}
-                <HangingRope
-                  top={277}
-                  className={cn(order.length >= 3 ? "block sm:hidden" : "hidden")}
-                />
-
-                {/* Row 3 rope (mobile only, visible when 5 cards wrap to third row) */}
-                <HangingRope
-                  top={522}
-                  className={cn(order.length >= 5 ? "block sm:hidden" : "hidden")}
-                />
+                {/* Continuous clothesline rope across the full corkboard */}
+                <HangingRope className="top-8" reduce={!!reduce} />
 
                 {order.length === 0 ? (
-                  <p className="pt-16 text-center text-sm font-medium text-[#5c4a2f]/60">
+                  <p className="pt-16 text-center text-sm font-medium text-itinerary-text/80 sm:min-w-0">
                     The line is empty. Reveal a card to peg your first stop.
                   </p>
                 ) : (
-                  <Reorder.Group
-                    axis="x"
-                    values={order}
-                    onReorder={setOrder}
-                    as="div"
-                    className="relative flex flex-wrap items-start justify-center gap-x-6 gap-y-12 pt-1 sm:gap-x-9"
-                  >
-                    {order.map((id, i) => (
-                      <PeggedCard
-                        key={id}
-                        id={id}
-                        index={i}
-                        stop={ITINERARY.find((s) => s.id === id)!}
-                        seq={seqOf(id)}
-                        isActive={id === active}
-                        reduce={!!reduce}
-                        onOpen={open}
-                      />
-                    ))}
-                  </Reorder.Group>
+                  <>
+                    <div
+                      ref={boardScrollRef}
+                      className="relative w-full -mt-8 -mb-4 overflow-x-auto overflow-y-hidden pb-4 pt-8 no-scrollbar sm:mb-0 sm:mt-0 sm:overflow-visible sm:overflow-x-visible sm:overflow-y-visible sm:pb-0 sm:pt-0"
+                    >
+                      <Reorder.Group
+                        axis="x"
+                        values={order}
+                        onReorder={setOrder}
+                        as="div"
+                        className={cn(
+                          "relative flex flex-nowrap items-start gap-x-5 px-3 pt-1 min-w-max sm:min-w-0 sm:justify-center sm:gap-x-9 sm:px-0",
+                          order.length <= 2 ? "justify-center" : "justify-start sm:justify-center",
+                        )}
+                      >
+                        {order.map((id, i) => (
+                          <PeggedCard
+                            key={id}
+                            id={id}
+                            index={i}
+                            stop={ITINERARY.find((s) => s.id === id)!}
+                            seq={seqOf(id)}
+                            isActive={id === active}
+                            reduce={!!reduce}
+                            onOpen={open}
+                          />
+                        ))}
+                      </Reorder.Group>
+                    </div>
+                    {order.length > 1 && (
+                      <p className="mt-3 text-center text-xs font-medium text-itinerary-text/75 sm:hidden">
+                        Drag peg to reorder stops &bull; Tap to inspect
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -331,13 +415,13 @@ export function ItinerarySection() {
         </div>
 
         {/* The stack (draw pile) */}
-        <div className="mt-14 flex flex-col items-center gap-6">
+        <div className="relative z-30 mt-14 flex flex-col items-center gap-6">
           {allRevealed ? (
-            <div className="relative aspect-[2.4/1] w-80 sm:w-[26rem]">
+            <div className="relative z-30 aspect-[2.4/1] w-80 sm:w-[26rem]">
               <AirplaneTicketCard reduce={!!reduce} onTear={reset} />
             </div>
           ) : (
-            <div className="relative aspect-[0.72] w-48 sm:w-52">
+            <div className="relative z-20 aspect-[0.72] w-48 sm:w-52">
               {deck
                 .map((stop, i) => ({ stop, i }))
                 .reverse()
@@ -350,17 +434,21 @@ export function ItinerarySection() {
                       layoutId={`stop-${stop.id}`}
                       transition={reduce ? { duration: 0.2 } : CARD_SPRING}
                       className={cn(
-                        "absolute inset-0",
+                        "absolute inset-0 !opacity-100",
                         isTop ? "cursor-grab active:cursor-grabbing" : "pointer-events-none",
                       )}
-                      style={{ zIndex: 30 - depth }}
+                      style={{
+                        zIndex: isTop ? 50 : 40 - depth,
+                        touchAction: isTop ? "none" : undefined,
+                        opacity: 1,
+                      }}
                       drag={isTop ? true : false}
                       dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
                       dragElastic={0.5}
                       dragMomentum={false}
                       onDragEnd={isTop ? handleDeckDragEnd : undefined}
                       onTap={isTop ? () => open(stop.id) : undefined}
-                      whileDrag={{ scale: 1.05 }}
+                      whileDrag={{ scale: 1.05, zIndex: 60 }}
                       aria-hidden={!isTop}
                     >
                       <motion.div
@@ -381,10 +469,13 @@ export function ItinerarySection() {
             </div>
           )}
 
-          {!allRevealed && (
-            <p className="mt-4 text-center text-xs font-medium tracking-wide text-neutral-700 sm:text-sm">
-              <span className="hidden sm:inline">Swipe or tap the top card</span>
-              <span className="sm:hidden">Tap the top card</span>
+          {!allRevealed ? (
+            <p className="mt-4 text-center text-xs font-medium tracking-wide text-neutral-800 sm:text-sm">
+              Swipe or tap the top card
+            </p>
+          ) : (
+            <p className="mt-4 text-center text-xs font-medium tracking-wide text-neutral-800 sm:text-sm">
+              Tap anywhere on the ticket to tear &amp; replay
             </p>
           )}
         </div>
@@ -410,7 +501,7 @@ export function ItinerarySection() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: reduce ? 0.15 : 0.3 }}
-              className="fixed inset-0 z-40 cursor-pointer bg-black/70"
+              className="fixed inset-0 z-60 cursor-pointer bg-black/70"
             />
           ) : (
             <motion.div
@@ -419,34 +510,44 @@ export function ItinerarySection() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: reduce ? 0.12 : 0.22 }}
-              className="pointer-events-none fixed inset-0 z-40 bg-black/35"
+              className="pointer-events-none fixed inset-0 z-60 bg-black/35"
             />
           ))}
       </AnimatePresence>
 
       {/* Spotlight card */}
-      {activeStop && (
-        <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-5">
+      <AnimatePresence>
+        {activeStop && (
           <motion.div
-            layoutId={`stop-${activeStop.id}`}
-            transition={reduce ? { duration: 0.2 } : CARD_SPRING}
-            className="pointer-events-auto relative w-full max-w-[22rem] sm:max-w-[25rem]"
-            style={{
-              aspectRatio: "0.70",
-              filter: reduce ? undefined : "drop-shadow(0 24px 45px rgba(0,0,0,0.3))",
-            }}
+            key={`spotlight-container-${activeStop.id}`}
+            className="pointer-events-none fixed inset-0 z-70 flex items-center justify-center p-5"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
           >
-            <CardFaces
-              stop={activeStop}
-              seq={seqOf(activeStop.id)}
-              faceUp
-              spin={!alreadyRevealed}
-              size="lg"
-              reduce={!!reduce}
-            />
+            <motion.div
+              layoutId={`stop-${activeStop.id}`}
+              transition={reduce ? { duration: 0.2 } : CARD_SPRING}
+              className="pointer-events-auto relative z-70 w-full max-w-[22rem] sm:max-w-[25rem] !opacity-100"
+              style={{
+                aspectRatio: "0.70",
+                filter: reduce ? undefined : "drop-shadow(0 24px 45px rgba(0,0,0,0.3))",
+                opacity: 1,
+              }}
+            >
+              <CardFaces
+                stop={activeStop}
+                seq={seqOf(activeStop.id)}
+                faceUp
+                spin={!alreadyRevealed}
+                size="lg"
+                reduce={!!reduce}
+              />
+            </motion.div>
           </motion.div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </section>
   );
 }

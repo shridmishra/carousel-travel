@@ -193,7 +193,7 @@ export function CardCarousel({
                     return arr;
                   });
                 }}
-                className="group relative h-2.5 rounded-full p-0 transition-all duration-300 shadow-sm"
+                className="group relative h-2.5 rounded-full p-0 transition-[width,background-color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] shadow-sm"
                 style={{
                   width: active ? 26 : 10,
                   backgroundColor: active ? it.colors.accent : "rgba(255,255,255,0.22)",
@@ -218,11 +218,11 @@ export function CardCarousel({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="mt-5 flex items-center gap-2 text-xs font-medium tracking-wide text-white/45"
+            className="mt-5 flex items-center gap-2 text-xs font-medium tracking-wide text-white/65"
           >
             <span className="hidden sm:inline">Drag aside to browse</span>
             <span className="sm:hidden">Swipe to browse</span>
-            <span aria-hidden className="text-white/30">·</span>
+            <span aria-hidden className="text-white/45">·</span>
             <span>tap to flip</span>
           </motion.p>
         )}
@@ -247,9 +247,9 @@ function NavButton({
       aria-label={label}
       onClick={onClick}
       className={cn(
-        "flex size-11 items-center justify-center rounded-full text-white/80 transition-all duration-200",
+        "flex size-11 items-center justify-center rounded-full text-white/80 transition-[background-color,color,box-shadow,transform] duration-150 ease-out",
         "bg-meridian-well shadow-inset-shallow shadow-inset-rim backdrop-blur-sm",
-        "hover:bg-meridian-surface hover:text-white hover:shadow-tactile-raised active:scale-[0.92] active:shadow-tactile-pressed",
+        "hover:bg-meridian-surface hover:text-white hover:shadow-tactile-raised active:scale-[0.97] active:duration-75 active:shadow-tactile-pressed",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
       )}
     >
@@ -331,7 +331,13 @@ function StackItem({
   return (
     <motion.div
       className="absolute inset-0 will-change-transform"
-      style={{ x, y, rotate, zIndex }}
+      style={{
+        x,
+        y,
+        rotate,
+        zIndex,
+        touchAction: isTop ? "none" : undefined,
+      }}
       custom={exitIntent}
       variants={{
         exit: (intent: ExitIntent) =>
@@ -340,10 +346,10 @@ function StackItem({
               x: intent.dir * 1300,
               opacity: 0,
               transition: reduce
-                ? { duration: 0.18 }
-                : { duration: 0.5, ease: [0.32, 0.72, 0.28, 1] },
+                ? { duration: 0.15 }
+                : { duration: 0.24, ease: [0.23, 1, 0.32, 1] },
             }
-            : { opacity: 0, scale: scale * 0.92, transition: { duration: 0.28 } },
+            : { opacity: 0, scale: scale * 0.92, transition: { duration: 0.2 } },
       }}
       exit="exit"
       initial={false}

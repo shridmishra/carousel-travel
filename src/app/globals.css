@@ -118,6 +118,9 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 :root {
@@ -253,14 +256,14 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* Meridian card carousel motion */
+/* Meridian card carousel motion - GPU accelerated */
 @keyframes meridian-sheen {
   0% {
-    background-position: 140% 0;
+    transform: translateX(-100%);
   }
   55%,
   100% {
-    background-position: -40% 0;
+    transform: translateX(200%);
   }
 }
 
@@ -269,3 +272,42 @@ html.lenis body {
     animation: none !important;
   }
 }
+
+/* Themed scrollbar & browser surfaces */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+/* Scrollbar suppression utilities */
+.no-scrollbar::-webkit-scrollbar,
+[data-no-scrollbar]::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar,
+[data-no-scrollbar] {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+

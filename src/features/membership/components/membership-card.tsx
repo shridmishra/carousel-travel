@@ -105,7 +105,9 @@ export function MembershipCard({
             "linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.85) 46%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0.85) 54%, transparent 80%)",
         }}
       />
-      <div className="pointer-events-none absolute inset-0 opacity-70 [animation:meridian-sheen_7s_ease-in-out_infinite] mix-blend-soft-light bg-[linear-gradient(105deg,transparent_38%,rgba(255,255,255,0.35)_48%,transparent_58%)] bg-[length:300%_100%]" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 w-full opacity-70 [animation:meridian-sheen_7s_cubic-bezier(0.77,0,0.175,1)_infinite] mix-blend-soft-light bg-[linear-gradient(105deg,transparent_35%,rgba(255,255,255,0.4)_48%,transparent_60%)]" />
+      </div>
 
       <div className="relative flex h-full flex-col justify-between p-6 sm:p-7">
         <div className="flex items-start justify-between">
@@ -179,7 +181,7 @@ export function MembershipCard({
               <p className="mt-0.5 text-xs font-semibold tabular-nums tracking-wider text-white/90">{item.serial}</p>
             </div>
           </div>
-          <p className="mt-3 text-[0.62rem] font-medium tracking-wide text-white/45">
+          <p className="mt-3 text-[0.62rem] font-medium tracking-wide text-white/60">
             {item.coordinates}
             {index && total ? (
               <span className="float-right tabular-nums">
@@ -269,7 +271,7 @@ export function MembershipCardBack({
             </div>
           </div>
           <div className="flex w-[38%] flex-col items-end justify-center rounded-md bg-white/5 px-3 ring-1 ring-inset ring-white/10 shadow-inset-rim">
-            <span className="text-[0.5rem] font-semibold uppercase tracking-[0.2em] text-white/45">
+            <span className="text-[0.5rem] font-semibold uppercase tracking-[0.2em] text-white/60">
               CVX
             </span>
             <span className="text-sm font-semibold tabular-nums text-white/90">
@@ -288,19 +290,19 @@ export function MembershipCardBack({
             </span>
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-white">{item.residence}</p>
-              <p className="truncate text-xs text-white/55">{item.region}</p>
+              <p className="truncate text-xs text-white/70">{item.region}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-white/10 pt-3">
             <div>
-              <p className="text-[0.54rem] font-semibold uppercase tracking-[0.22em] text-white/40">
+              <p className="text-[0.54rem] font-semibold uppercase tracking-[0.22em] text-white/55">
                 Serial
               </p>
               <p className="mt-0.5 text-xs font-medium tabular-nums tracking-wider text-white/85">{item.serial}</p>
             </div>
             <div className="text-right">
-              <p className="text-[0.54rem] font-semibold uppercase tracking-[0.22em] text-white/40">
+              <p className="text-[0.54rem] font-semibold uppercase tracking-[0.22em] text-white/55">
                 Coordinates
               </p>
               <p className="mt-0.5 text-[0.62rem] font-medium tabular-nums text-white/85">

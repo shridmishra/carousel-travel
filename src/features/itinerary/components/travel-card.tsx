@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import type { Stop } from "../types";
 import { SolidPlane, MapPin } from "./icons";
 import { GRAIN_URI } from "../textures";
+import { playButtonClick } from "../sound";
 
 /**
  * Mathematically tangent rounded corner cutout clip paths for the travel card photo.
@@ -184,7 +185,10 @@ export function TravelCardFront({ stop, size = "md" }: { stop: Stop; size?: "md"
 
         <Button
           type="button"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            playButtonClick();
+          }}
           className={cn(
             "group/book flex w-full items-center justify-center gap-1.5 rounded-full bg-neutral-900 font-semibold text-white transition-transform active:scale-[0.98] hover:bg-neutral-800",
             lg ? "mt-2.5 h-10 text-sm" : "mt-1 h-7 text-[0.68rem]",
@@ -193,7 +197,7 @@ export function TravelCardFront({ stop, size = "md" }: { stop: Stop; size?: "md"
           Book Now
           <Plane
             className={cn(
-              "shrink-0 transition-transform duration-300 ease-out group-hover/book:translate-x-0.5 group-hover/book:-translate-y-0.5",
+              "shrink-0 transition-transform duration-150 ease-out [@media(hover:hover)_and_(pointer:fine)]:group-hover/book:translate-x-0.5 [@media(hover:hover)_and_(pointer:fine)]:group-hover/book:-translate-y-0.5",
               lg ? "size-4" : "size-3",
             )}
             strokeWidth={2}
@@ -295,12 +299,12 @@ export function CardFaces({
         className="relative h-full w-full [transform-style:preserve-3d]"
         initial={spin ? { rotateY: 0 } : false}
         animate={{ rotateY: faceUp ? 180 : 0 }}
-        transition={reduce ? { duration: 0.2 } : { duration: 0.8, ease: [0.22, 0.61, 0.36, 1] }}
+        transition={reduce ? { duration: 0.2 } : { duration: 0.38, ease: [0.23, 1, 0.32, 1] }}
       >
-        <div className="absolute inset-0 [backface-visibility:hidden] [-webkit-backface-visibility:hidden]">
+        <div className="absolute inset-0 [backface-visibility:hidden] [-webkit-backface-visibility:hidden] [transform:translateZ(1px)]">
           <PostcardBack stop={stop} seq={seq} size={size} />
         </div>
-        <div className="absolute inset-0 [backface-visibility:hidden] [-webkit-backface-visibility:hidden] [transform:rotateY(180deg)]">
+        <div className="absolute inset-0 [backface-visibility:hidden] [-webkit-backface-visibility:hidden] [transform:rotateY(180deg)_translateZ(1px)]">
           <TravelCardFront stop={stop} size={size} />
         </div>
       </motion.div>
