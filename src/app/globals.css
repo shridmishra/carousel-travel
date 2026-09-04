@@ -83,6 +83,8 @@
   --color-itinerary-card-back: var(--itinerary-card-back);
   --color-itinerary-text: var(--itinerary-text);
   --color-itinerary-accent: var(--itinerary-accent);
+  --color-itinerary-rope: var(--itinerary-rope);
+  --color-itinerary-pin: var(--itinerary-pin);
   --color-ticket-bg: var(--ticket-bg);
   --color-ticket-foreground: var(--ticket-foreground);
   --color-ticket-muted: var(--ticket-muted);
@@ -96,9 +98,20 @@
   --color-meridian-surface: var(--meridian-surface);
   --color-meridian-surface-hover: var(--meridian-surface-hover);
   --color-meridian-surface-active: var(--meridian-surface-active);
-  --shadow-inset-well: inset 0 2px 8px 0 rgba(0, 0, 0, 0.8), inset 0 1px 2px 0 rgba(0, 0, 0, 0.6);
-  --shadow-inset-shallow: inset 0 1px 3px 0 rgba(0, 0, 0, 0.65), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-  --shadow-tactile-raised: 0 8px 24px -4px rgba(0, 0, 0, 0.6), 0 2px 6px -1px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+  --color-cta-dark: var(--cta-dark);
+  --color-cta-dark-hover: var(--cta-dark-hover);
+  --color-cta-dark-border: var(--cta-dark-border);
+  --color-cta-light: var(--cta-light);
+  --color-cta-light-hover: var(--cta-light-hover);
+  --color-white-pure: var(--white-pure);
+  --shadow-cta-rim: inset 1.5px 1.5px 2px 0px rgba(255, 255, 255, 0.15);
+  --shadow-cta-rim-subtle: inset 1.5px 1.5px 2px 0px rgba(255, 255, 255, 0.05);
+  --shadow-cta-layer: inset 0.3px 0.3px 0px 0px rgba(156, 156, 156, 0.6);
+  --shadow-inset-rim: inset 1.5px 1.5px 2px 0px rgba(255, 255, 255, 0.15);
+  --shadow-membership-card: 0 2px 2px rgba(0, 0, 0, 0.12), 0 18px 40px -12px rgba(0, 0, 0, 0.55), inset 1.5px 1.5px 2px 0px rgba(255, 255, 255, 0.15);
+  --shadow-inset-well: inset 0 2px 8px 0 rgba(0, 0, 0, 0.8), inset 0 1px 2px 0 rgba(0, 0, 0, 0.6), inset 1.5px 1.5px 2px 0px rgba(255, 255, 255, 0.08);
+  --shadow-inset-shallow: inset 0 1px 3px 0 rgba(0, 0, 0, 0.65), inset 1.5px 1.5px 2px 0px rgba(255, 255, 255, 0.15);
+  --shadow-tactile-raised: 0 8px 24px -4px rgba(0, 0, 0, 0.6), 0 2px 6px -1px rgba(0, 0, 0, 0.4), inset 1.5px 1.5px 2px 0px rgba(255, 255, 255, 0.15);
   --shadow-tactile-pressed: inset 0 2px 6px 0 rgba(0, 0, 0, 0.75), inset 0 1px 2px 0 rgba(0, 0, 0, 0.5);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -133,6 +146,8 @@
   --itinerary-card-back: #e6dcc6;
   --itinerary-text: #5c4a2f;
   --itinerary-accent: #e8843c;
+  --itinerary-rope: #3f2a15;
+  --itinerary-pin: #5a3c20;
   --ticket-bg: #faf7ef;
   --ticket-foreground: #1c1917;
   --ticket-muted: #78716c;
@@ -146,6 +161,12 @@
   --meridian-surface: rgba(255, 255, 255, 0.05);
   --meridian-surface-hover: rgba(255, 255, 255, 0.09);
   --meridian-surface-active: rgba(255, 255, 255, 0.14);
+  --cta-dark: #1b1b1b;
+  --cta-dark-hover: #262626;
+  --cta-dark-border: rgba(255, 255, 255, 0.1);
+  --cta-light: #ffffff;
+  --cta-light-hover: #e5e5e5;
+  --white-pure: #ffffff;
   --radius: 0.625rem;
 }
 
@@ -175,6 +196,8 @@
   --itinerary-card-back: #e6dcc6;
   --itinerary-text: #5c4a2f;
   --itinerary-accent: #e8843c;
+  --itinerary-rope: #3f2a15;
+  --itinerary-pin: #5a3c20;
   --ticket-bg: #1c1917;
   --ticket-foreground: #fafaf9;
   --ticket-muted: #a8a29e;
@@ -188,6 +211,12 @@
   --meridian-surface: rgba(255, 255, 255, 0.05);
   --meridian-surface-hover: rgba(255, 255, 255, 0.09);
   --meridian-surface-active: rgba(255, 255, 255, 0.14);
+  --cta-dark: #1b1b1b;
+  --cta-dark-hover: #262626;
+  --cta-dark-border: rgba(255, 255, 255, 0.1);
+  --cta-light: #ffffff;
+  --cta-light-hover: #e5e5e5;
+  --white-pure: #ffffff;
 }
 
 * {

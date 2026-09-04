@@ -9,15 +9,18 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+          "bg-primary text-primary-foreground shadow hover:bg-primary/90 dark:shadow-inset-rim",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 dark:shadow-inset-rim",
         outline:
-          "border border-border bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+          "border border-border bg-background shadow-sm hover:bg-accent hover:text-accent-foreground dark:shadow-inset-rim",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 dark:shadow-inset-rim",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        tactile:
+          "border-0 bg-meridian-surface-active text-white shadow-tactile-raised hover:bg-meridian-surface hover:text-white active:scale-[0.98] active:shadow-tactile-pressed [&_svg]:size-auto",
+        unstyled: "",
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -54,3 +57,5 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button";
 
 export { Button, buttonVariants };
+export { CtaButton } from "./cta-button";
+export type { CtaButtonProps } from "./cta-button";
