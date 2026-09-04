@@ -22,7 +22,6 @@ import {
   LuggageTag,
   CompassDoodle,
   WashiTape,
-  MiniPolaroid,
   Stamp,
   StickyNote,
   PushPin,
@@ -35,14 +34,22 @@ import { PeggedCard, CARD_SPRING } from "./components/pegged-card";
 function HangingRope({
   top,
   className,
+  reduce = false,
 }: {
   top?: number | string;
   className?: string;
+  reduce?: boolean;
 }) {
   return (
-    <div
+    <motion.div
       className={cn("pointer-events-none absolute inset-x-6 sm:inset-x-10", className)}
       style={top !== undefined ? { top: typeof top === "number" ? `${top}px` : top } : undefined}
+      animate={reduce ? undefined : { y: [0, 1.2, 0] }}
+      transition={
+        reduce
+          ? undefined
+          : { duration: 5.5, repeat: Infinity, ease: [0.45, 0.05, 0.55, 0.95] }
+      }
       aria-hidden
     >
       <span className="absolute -left-1.5 -top-1 size-3 rounded-full bg-itinerary-pin shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
@@ -63,7 +70,7 @@ function HangingRope({
           vectorEffect="non-scaling-stroke"
         />
       </svg>
-    </div>
+    </motion.div>
   );
 }
 
@@ -101,7 +108,7 @@ export function ItinerarySection() {
 
   React.useEffect(() => {
     if (!active || alreadyRevealed) return;
-    const flip = reduce ? 220 : 820;
+    const flip = reduce ? 180 : 420;
     const t = window.setTimeout(hang, flip);
     return () => window.clearTimeout(t);
   }, [active, alreadyRevealed, reduce, hang]);
@@ -161,30 +168,7 @@ export function ItinerarySection() {
         <div className="absolute right-[10%] top-16 hidden lg:block xl:right-[15%]">
           <CompassDoodle className="h-14 w-14 opacity-70" rotate={9} />
         </div>
-        <div className="absolute left-6 top-[19rem] hidden 2xl:block">
-          <WashiTape rotate={-16} className="absolute -left-2 -top-2 z-10 w-12" tone="rgba(210,200,180,0.6)" />
-          <MiniPolaroid
-            scene="linear-gradient(155deg,#e08a4c,#c65b73 65%,#7a5cc0)"
-            caption="the trip"
-            rotate={-8}
-          />
-        </div>
-        <div className="absolute left-10 top-[32rem] hidden 2xl:block">
-          <Stamp code="RVK" hue="#3fb79a" rotate={-9} />
-        </div>
-        <div className="absolute right-10 top-[24rem] hidden 2xl:block">
-          <StickyNote color="#bfe6c9" ink="#2f6b45" rotate={6}>
-            pack
-            <br />
-            light
-          </StickyNote>
-          <PushPin color="#d64a4a" className="absolute -top-3 left-1/2 h-5 w-5 -translate-x-1/2 drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)]" />
-        </div>
 
-        <div className="absolute bottom-16 right-12 hidden 2xl:block">
-          <BoardingStub from="JFK" to="CDG" rotate={8} />
-          <PushPin color="#3a7bd5" className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)]" />
-        </div>
       </div>
 
       <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-5 py-16 sm:px-8 lg:py-20">
@@ -266,18 +250,20 @@ export function ItinerarySection() {
               {/* Inner padded stage with the rope */}
               <div className="relative min-h-[17rem] px-5 pb-8 pt-12 sm:px-9 sm:pt-14">
                 {/* Row 1 rope (always visible on all screens, fixed position on desktop and mobile) */}
-                <HangingRope className="top-8" />
+                <HangingRope className="top-8" reduce={!!reduce} />
 
                 {/* Row 2 rope (mobile only, visible when >= 3 cards wrap to second row) */}
                 <HangingRope
                   top={277}
                   className={cn(order.length >= 3 ? "block sm:hidden" : "hidden")}
+                  reduce={!!reduce}
                 />
 
                 {/* Row 3 rope (mobile only, visible when 5 cards wrap to third row) */}
                 <HangingRope
                   top={522}
                   className={cn(order.length >= 5 ? "block sm:hidden" : "hidden")}
+                  reduce={!!reduce}
                 />
 
                 {order.length === 0 ? (

@@ -178,7 +178,7 @@ export function AirplaneTicketCard({
               </div>
 
               {/* Replay action text on stub */}
-              <div className="flex items-center justify-center rounded px-2 py-0.5 transition-all group-hover:scale-105 group-hover:bg-ticket-foreground/10">
+              <div className="flex items-center justify-center rounded px-2 py-0.5 transition-[transform,background-color] duration-150 [@media(hover:hover)_and_(pointer:fine)]:group-hover:scale-[1.03] group-hover:bg-ticket-foreground/10">
                 <span className="text-[0.52rem] font-black uppercase tracking-[0.2em] text-ticket-muted transition-colors group-hover:text-ticket-foreground">
                   ✂ Replay
                 </span>
@@ -218,8 +218,8 @@ export function AirplaneTicketCard({
               rotate: reduce ? 0 : -6,
             }}
             transition={{
-              duration: reduce ? 0.25 : 0.85,
-              ease: [0.22, 1, 0.36, 1],
+              duration: reduce ? 0.2 : 0.42,
+              ease: [0.23, 1, 0.32, 1],
             }}
           >
             <div
@@ -282,8 +282,8 @@ export function AirplaneTicketCard({
               rotate: reduce ? 0 : 20,
             }}
             transition={{
-              duration: reduce ? 0.25 : 0.85,
-              ease: [0.22, 1, 0.36, 1],
+              duration: reduce ? 0.2 : 0.42,
+              ease: [0.23, 1, 0.32, 1],
             }}
             onAnimationComplete={() => {
               setTearing(false);

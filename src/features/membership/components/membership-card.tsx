@@ -105,7 +105,9 @@ export function MembershipCard({
             "linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.85) 46%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0.85) 54%, transparent 80%)",
         }}
       />
-      <div className="pointer-events-none absolute inset-0 opacity-70 [animation:meridian-sheen_7s_ease-in-out_infinite] mix-blend-soft-light bg-[linear-gradient(105deg,transparent_38%,rgba(255,255,255,0.35)_48%,transparent_58%)] bg-[length:300%_100%]" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 w-full opacity-70 [animation:meridian-sheen_7s_cubic-bezier(0.77,0,0.175,1)_infinite] mix-blend-soft-light bg-[linear-gradient(105deg,transparent_35%,rgba(255,255,255,0.4)_48%,transparent_60%)]" />
+      </div>
 
       <div className="relative flex h-full flex-col justify-between p-6 sm:p-7">
         <div className="flex items-start justify-between">

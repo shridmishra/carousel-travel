@@ -193,7 +193,7 @@ export function CardCarousel({
                     return arr;
                   });
                 }}
-                className="group relative h-2.5 rounded-full p-0 transition-all duration-300 shadow-sm"
+                className="group relative h-2.5 rounded-full p-0 transition-[width,background-color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] shadow-sm"
                 style={{
                   width: active ? 26 : 10,
                   backgroundColor: active ? it.colors.accent : "rgba(255,255,255,0.22)",
@@ -247,9 +247,9 @@ function NavButton({
       aria-label={label}
       onClick={onClick}
       className={cn(
-        "flex size-11 items-center justify-center rounded-full text-white/80 transition-all duration-200",
+        "flex size-11 items-center justify-center rounded-full text-white/80 transition-[background-color,color,box-shadow,transform] duration-150 ease-out",
         "bg-meridian-well shadow-inset-shallow shadow-inset-rim backdrop-blur-sm",
-        "hover:bg-meridian-surface hover:text-white hover:shadow-tactile-raised active:scale-[0.92] active:shadow-tactile-pressed",
+        "hover:bg-meridian-surface hover:text-white hover:shadow-tactile-raised active:scale-[0.97] active:duration-75 active:shadow-tactile-pressed",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
       )}
     >
@@ -340,10 +340,10 @@ function StackItem({
               x: intent.dir * 1300,
               opacity: 0,
               transition: reduce
-                ? { duration: 0.18 }
-                : { duration: 0.5, ease: [0.32, 0.72, 0.28, 1] },
+                ? { duration: 0.15 }
+                : { duration: 0.24, ease: [0.23, 1, 0.32, 1] },
             }
-            : { opacity: 0, scale: scale * 0.92, transition: { duration: 0.28 } },
+            : { opacity: 0, scale: scale * 0.92, transition: { duration: 0.2 } },
       }}
       exit="exit"
       initial={false}

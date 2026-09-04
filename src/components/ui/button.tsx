@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 cursor-pointer active:scale-[0.98]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-[color,background-color,border-color,box-shadow,transform] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 cursor-pointer active:scale-[0.97] active:duration-75",
   {
     variants: {
       variant: {
@@ -19,7 +19,7 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         tactile:
-          "border-0 bg-meridian-surface-active text-white shadow-tactile-raised hover:bg-meridian-surface hover:text-white active:scale-[0.98] active:shadow-tactile-pressed [&_svg]:size-auto",
+          "border-0 bg-meridian-surface-active text-white shadow-tactile-raised hover:bg-meridian-surface hover:text-white active:scale-[0.97] active:shadow-tactile-pressed [&_svg]:size-auto",
         unstyled: "",
       },
       size: {

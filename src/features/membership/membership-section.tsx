@@ -4,6 +4,7 @@ import * as React from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight01Icon, Key01Icon } from "hugeicons-react";
 import { CtaButton } from "@/components/ui/cta-button";
+import { cn } from "@/lib/utils";
 import { CardCarousel } from "./components/card-carousel";
 import { DESTINATIONS } from "./data/destinations";
 import type { DestinationCard } from "./types";
@@ -30,18 +31,24 @@ export function MembershipSection() {
     show: {
       opacity: 1,
       y: 0,
-      transition: { duration: reduce ? 0.2 : 0.7, ease: [0.22, 0.61, 0.36, 1] as const },
+      transition: { duration: reduce ? 0.2 : 0.5, ease: [0.23, 1, 0.32, 1] as const },
     },
   };
 
   return (
     <section className="relative isolate min-h-screen w-full overflow-hidden bg-meridian-bg text-white">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-40 transition-[background] duration-1000 ease-out"
-        style={{
-          background: `radial-gradient(120% 90% at 78% 12%, ${active.colors.glow}22, transparent 60%)`,
-        }}
-      />
+      {DESTINATIONS.map((d) => (
+        <div
+          key={d.id}
+          className={cn(
+            "pointer-events-none absolute inset-0 transition-opacity duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]",
+            d.id === active.id ? "opacity-40" : "opacity-0"
+          )}
+          style={{
+            background: `radial-gradient(120% 90% at 78% 12%, ${d.colors.glow}22, transparent 60%)`,
+          }}
+        />
+      ))}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(100%_60%_at_50%_0%,rgba(255,255,255,0.05),transparent_55%)]" />
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-overlay"
@@ -103,7 +110,7 @@ export function MembershipSection() {
                 className="h-11 sm:h-12 px-5 sm:px-6 font-semibold"
               >
                 Request invitation
-                <ArrowRight01Icon className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                <ArrowRight01Icon className="size-4 transition-transform duration-200 [@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-x-0.5" />
               </CtaButton>
               <CtaButton
                 type="button"

@@ -107,12 +107,16 @@ export function PeggedCard({
             ? { rotate: 0 }
             : reduce
               ? { rotate: tilt }
-              : { rotate: [tilt - 1.1, tilt + 1.1, tilt - 1.1] }
+              : { rotate: [tilt - 1.2, tilt + 1.2, tilt - 1.2] }
         }
         transition={
           dragging || reduce
-            ? { duration: 0.25 }
-            : { duration: 4.5 + (index % 3) * 0.8, repeat: Infinity, ease: "easeInOut" }
+            ? { duration: 0.2 }
+            : {
+                duration: 4.2 + (index % 3) * 0.8,
+                repeat: Infinity,
+                ease: [0.45, 0.05, 0.55, 0.95],
+              }
         }
       >
         <div className="absolute inset-x-2 bottom-1 top-4 rounded-[1rem] bg-black/35 blur-md" />
@@ -123,7 +127,11 @@ export function PeggedCard({
           <motion.div
             initial={reduce ? false : { opacity: 0, y: -8, scale: 0.85 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={reduce ? { duration: 0.2 } : { delay: 0.18, duration: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
+            transition={
+              reduce
+                ? { duration: 0.15 }
+                : { delay: 0.05, duration: 0.18, ease: [0.23, 1, 0.32, 1] }
+            }
           >
             <Clothespin className="h-8 w-6 drop-shadow-[0_3px_3px_rgba(0,0,0,0.4)]" />
           </motion.div>

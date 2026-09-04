@@ -46,7 +46,7 @@ export const CtaButton = React.forwardRef<HTMLButtonElement, CtaButtonProps>(
         disabled={disabled}
         variant="unstyled"
         className={cn(
-          "group relative overflow-hidden rounded-full font-sans transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border active:scale-[0.98]",
+          "group relative overflow-hidden rounded-full font-sans transition-[color,background-color,border-color,transform] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border active:scale-[0.97] active:duration-75",
           sizeClasses,
           isDark
             ? "bg-cta-dark border-cta-dark-border text-white-pure hover:text-cta-dark group-hover:text-cta-dark shadow-cta-rim-subtle"
@@ -59,10 +59,10 @@ export const CtaButton = React.forwardRef<HTMLButtonElement, CtaButtonProps>(
         {/* Sliding Layer */}
         {isDark ? (
           /* Dark variant: slides UP (from bottom to top) on hover, revealing white background */
-          <span className="absolute inset-0 bg-white-pure rounded-full shadow-cta-layer translate-y-[102%] transition-transform duration-300 ease-out z-0 pointer-events-none group-hover:translate-y-0 motion-reduce:transition-none" />
+          <span className="absolute inset-0 bg-white-pure rounded-full shadow-cta-layer translate-y-[102%] transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] z-0 pointer-events-none [@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-y-0 motion-reduce:transition-none" />
         ) : (
           /* Default variant: slides DOWN (from center to bottom) on hover, revealing dark background */
-          <span className="absolute inset-0 bg-white-pure rounded-full shadow-cta-layer translate-y-0 transition-transform duration-300 ease-out z-0 pointer-events-none group-hover:translate-y-[102%] motion-reduce:transition-none" />
+          <span className="absolute inset-0 bg-white-pure rounded-full shadow-cta-layer translate-y-0 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] z-0 pointer-events-none [@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-y-[102%] motion-reduce:transition-none" />
         )}
 
         {/* Content wrapper */}

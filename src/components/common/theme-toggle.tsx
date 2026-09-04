@@ -43,9 +43,9 @@ export function ThemeToggle() {
       aria-label="Toggle theme"
     >
       {isDark ? (
-        <Sun01Icon className="size-4 text-foreground transition-transform duration-200 rotate-0 hover:rotate-45" />
+        <Sun01Icon className="size-4 text-foreground transition-transform duration-200 rotate-0 [@media(hover:hover)_and_(pointer:fine)]:hover:rotate-45" />
       ) : (
-        <Moon02Icon className="size-4 text-foreground transition-transform duration-200 -rotate-12 hover:rotate-0" />
+        <Moon02Icon className="size-4 text-foreground transition-transform duration-200 -rotate-12 [@media(hover:hover)_and_(pointer:fine)]:hover:rotate-0" />
       )}
     </Button>
   );
