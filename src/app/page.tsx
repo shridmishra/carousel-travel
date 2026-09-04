@@ -1,9 +1,11 @@
-import { BlankCanvasSection } from "@/components/sections/blank-canvas-section";
+import { MembershipSection } from "@/features/membership";
+import { ItinerarySection } from "@/features/itinerary";
 
 export default function Home() {
   return (
     <main className="w-full">
-      <BlankCanvasSection />
+      <MembershipSection />
+      <ItinerarySection />
     </main>
   );
 }

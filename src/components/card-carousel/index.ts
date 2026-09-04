@@ -1,4 +1,4 @@
-export { CardCarousel } from "./card-carousel";
-export { MembershipCard } from "./membership-card";
-export { DESTINATIONS } from "./data";
-export type { DestinationCard, EmblemKey } from "./data";
+export { CardCarousel } from "@/features/membership";
+export { MembershipCard, MembershipCardBack } from "@/features/membership";
+export { DESTINATIONS } from "@/features/membership";
+export type { DestinationCard, EmblemKey } from "@/features/membership";
