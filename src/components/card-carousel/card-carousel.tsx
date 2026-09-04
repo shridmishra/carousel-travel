@@ -44,10 +44,16 @@ export function CardCarousel({
   onActiveChange,
 }: CardCarouselProps) {
   const reduce = useReducedMotion();
-  const uidRef = React.useRef(items.length);
   const [stack, setStack] = React.useState<StackEntry[]>(() =>
     items.map((item, i) => ({ item, uid: i, enterFrom: null }))
   );
+  // Monotonic uid source. Never reuses a value, even while an exiting card is
+  // still mounted inside AnimatePresence (which is not reflected in `stack`).
+  const uidCounter = React.useRef(items.length);
+  const nextUid = React.useCallback(() => {
+    uidCounter.current += 1;
+    return uidCounter.current;
+  }, []);
   const [exitDir, setExitDir] = React.useState(1);
   const [hasInteracted, setHasInteracted] = React.useState(false);
 
@@ -60,28 +66,21 @@ export function CardCarousel({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [front.uid]);
 
-  const nextUid = () => {
-    uidRef.current += 1;
-    return uidRef.current;
-  };
-
   const advance = React.useCallback((dir: number) => {
     setExitDir(dir >= 0 ? 1 : -1);
     setStack((prev) => {
       const [first, ...rest] = prev;
-      return [...rest, { item: first.item, uid: uidRef.current + 1, enterFrom: null }];
+      return [...rest, { item: first.item, uid: nextUid(), enterFrom: null }];
     });
-    uidRef.current += 1;
-  }, []);
+  }, [nextUid]);
 
   const rewind = React.useCallback(() => {
     setStack((prev) => {
       const last = prev[prev.length - 1];
       const rest = prev.slice(0, prev.length - 1);
-      return [{ item: last.item, uid: uidRef.current + 1, enterFrom: -1400 }, ...rest];
+      return [{ item: last.item, uid: nextUid(), enterFrom: -1400 }, ...rest];
     });
-    uidRef.current += 1;
-  }, []);
+  }, [nextUid]);
 
   const handleNext = () => {
     setHasInteracted(true);
@@ -173,8 +172,7 @@ export function CardCarousel({
                     let arr = prev;
                     for (let s = 0; s < steps; s++) {
                       const [f, ...r] = arr;
-                      uidRef.current += 1;
-                      arr = [...r, { item: f.item, uid: uidRef.current, enterFrom: null }];
+                      arr = [...r, { item: f.item, uid: nextUid(), enterFrom: null }];
                     }
                     return arr;
                   });

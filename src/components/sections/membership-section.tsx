@@ -124,17 +124,16 @@ export function MembershipSection() {
             </motion.p>
 
             <motion.ul variants={rise} className="mt-10 space-y-px">
-              {BENEFITS.map((b, i) => (
+              {BENEFITS.map((b) => (
                 <li
                   key={b.title}
                   className="flex items-start gap-4 border-t border-white/10 py-4 last:border-b"
-                  style={i === 0 ? undefined : undefined}
                 >
                   <span
                     className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-colors duration-700"
                     style={{ color: active.colors.accent }}
                   >
-                    <span className="size-4.5 [&>svg]:size-full">{b.icon}</span>
+                    <span className="size-[18px] [&>svg]:size-full">{b.icon}</span>
                   </span>
                   <div>
                     <p className="text-[0.95rem] font-semibold text-white">{b.title}</p>
