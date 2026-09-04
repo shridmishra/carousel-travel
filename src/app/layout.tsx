@@ -50,10 +50,7 @@ const satoshi = localFont({
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://meridianpass.com";
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#08080a" },
-  ],
+  themeColor: "#08080a",
   width: "device-width",
   initialScale: 1,
 };
@@ -144,7 +141,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={satoshi.variable}>
+    <html lang="en" suppressHydrationWarning className={`dark ${satoshi.variable}`}>
       <head>
         <script
           type="application/ld+json"
@@ -154,8 +151,9 @@ export default function RootLayout({
       <body className="min-h-screen bg-background text-foreground antialiased font-sans selection:bg-foreground selection:text-background">
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
-          enableSystem
+          defaultTheme="dark"
+          forcedTheme="dark"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <SmoothScrollProvider>
